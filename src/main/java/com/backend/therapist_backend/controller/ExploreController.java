@@ -15,7 +15,7 @@ public class ExploreController {
     private ExploreService exploreService;
 
     @GetMapping
-    public List<Explore> getAllPerson(){
+    public List<Explore> getAllTherapist(){
         return exploreService.getAllExplore();
     }
 

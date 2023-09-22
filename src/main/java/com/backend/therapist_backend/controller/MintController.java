@@ -15,7 +15,7 @@ public class MintController {
     private MintService mintService;
 
     @GetMapping
-    public List<Mint> getAllPerson(){
+    public List<Mint> getAllMints(){
         return mintService.getAllMints();
     }
 
