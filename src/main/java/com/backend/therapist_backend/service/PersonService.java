@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PersonService {
     String save(Person person);
@@ -15,13 +16,8 @@ public interface PersonService {
 
     void delete(String id);
 
-    List<Person> getByPersionAge(Integer minAge, Integer maxAge);
-
-    Page<Person> search(String name, Integer minAge, Integer maxAge, String city, Pageable pageable);
-
-    List<Document> getOldestpersonByCity();
-
-    List<Document> getPopulationByCity();
 
     List<Person> getAllPerson();
+
+    Optional<Person> getPersionById(String id);
 }
