@@ -20,6 +20,4 @@ public class Person {
     private Integer todayTask;
     private Integer activeDays;
     private ArrayList<Integer> dailyReport;
-    private List<Explore> explore;
-    private Miscellaneous miscellaneous;
 }
