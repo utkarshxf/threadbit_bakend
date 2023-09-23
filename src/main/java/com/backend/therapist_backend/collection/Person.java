@@ -17,7 +17,7 @@ public class Person {
     private String personId;
     private String firstName;
     private String lastName;
-    private Integer todayTask;
+    private List<String> todayTask;
     private Integer activeDays;
-    private ArrayList<Integer> dailyReport;
+    private ArrayList<Float> dailyReport;
 }
