@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 @Data
 @Builder
-@Document(collection = "patient")
+@Document(collection = "person")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Person {
     @Id
     private String personId;
     private String firstName;
     private String lastName;
-    private List<String> todayTask;
-    private Integer activeDays;
-    private ArrayList<Float> dailyReport;
+    private String type;
+    private Integer year ;
+    private String course;
 }

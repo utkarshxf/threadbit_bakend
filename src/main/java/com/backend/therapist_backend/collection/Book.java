@@ -6,17 +6,18 @@ import lombok.Data;
 import nonapi.io.github.classgraph.json.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data
 @Builder
-@Document(collection = "blog")
+@Document(collection = "book")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Blog {
+public class Book {
     @Id
-    private String blogId;
+    private String bookId;
     private String name;
-    private String username;
+    private String author;
+    private String about;
+    private List<Review> review;
     private String imageUrl;
-    private String title;
-    private String data;
-    private Integer views;
 }
