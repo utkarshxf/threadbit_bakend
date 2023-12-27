@@ -5,13 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
+import java.util.Date;
+
 @Data
 @Builder
 public class Review{
     private String userId;
     private Boolean verified;
-    private String reviewStart;
+    private Integer reviewStar;
+    private Integer teachingStyle;
+    private Integer internalMarks;
+    private Integer externalMark;
     private String reviewText;
-    private String date;
+    private String  date;
     private String BookId;
 }

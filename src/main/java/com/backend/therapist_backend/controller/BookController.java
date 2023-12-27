@@ -30,11 +30,9 @@ public class BookController {
     public List<Book> getBookStartWith(@RequestParam("name") String name){
         return bookService.getBookStartWith(name);
     }
-    @PutMapping
-    public Book modifyTask(@RequestBody Book book , @RequestParam String key){
-        return bookService.updateTask(book , key);
+    @PutMapping("/{id}")
+    public Book modifyReview(@PathVariable String id, @RequestBody Book book) {
+        return bookService.updateTask(book, id);
     }
-
-
 
 }

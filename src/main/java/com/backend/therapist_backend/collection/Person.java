@@ -20,4 +20,6 @@ public class Person {
     private String type;
     private Integer year ;
     private String course;
+    private Integer totalReviews;
+    private Integer completedProfile;
 }
