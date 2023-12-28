@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-@CrossOrigin(originPatterns = "https://**")
+@CrossOrigin(originPatterns =  "*")
 //@CrossOrigin(originPatterns = "https://deployed-backend.onrender.com:8080")
 @SpringBootApplication
 @EnableSwagger2
