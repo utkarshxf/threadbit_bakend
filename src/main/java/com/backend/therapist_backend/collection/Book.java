@@ -16,10 +16,7 @@ public class Book {
     @Id
     private String _id;
     private String name;
-    private String author;
     private String subject;
-    private Integer teaching;
-    private Integer internal;
     private String about;
     private List<Review> review;
     private String imageUrl;

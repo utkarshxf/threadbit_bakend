@@ -12,11 +12,10 @@ import java.util.Date;
 public class Review{
     private String userId;
     private Boolean verified;
-    private Integer reviewStar;
+    private Boolean anonymous;
     private Integer teachingStyle;
     private Integer internalMarks;
     private Integer externalMark;
-    private String reviewText;
+    private String  reviewText;
     private String  date;
-    private String BookId;
 }
