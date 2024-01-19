@@ -14,12 +14,9 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Person {
     @Id
-    private String personId;
-    private String firstName;
-    private String lastName;
-    private String type;
-    private Integer year ;
-    private String course;
+    private String _id;
+    private String name;
+    private String email;
     private Integer totalReviews;
     private Integer completedProfile;
 }

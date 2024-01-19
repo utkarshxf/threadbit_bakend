@@ -27,12 +27,7 @@ public class PersonServiceImpl implements PersonService{
     private MongoTemplate mongoTemplate;
     @Override
     public String save(Person person) {
-        return personRepository.save(person).getPersonId();
-    }
-
-    @Override
-    public List<Person> getPersonStartWith(String name) {
-        return personRepository.findByFirstNameStartsWith(name);
+        return personRepository.save(person).get_id();
     }
 
     @Override
