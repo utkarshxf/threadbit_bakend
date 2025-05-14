@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.backend</groupId>
-    <artifactId>therapist_backend</artifactId>
+    <artifactId>threadbit</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>therapist_backend</name>
-    <description>therapist_backend</description>
+    <name>threadbit_backend</name>
+    <description>threadbit_backend</description>
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -46,6 +46,11 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
             <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>8.0.0</version>
         </dependency>
     </dependencies>
 
