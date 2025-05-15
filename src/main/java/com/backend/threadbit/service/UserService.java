@@ -8,4 +8,6 @@ public interface UserService {
     UserResponseDto createUser(UserDto userDto);
     UserResponseDto getUserById(String id);
     UserResponseDto getUserByUsername(String username);
+
+    UserResponseDto getUserByPhone(String phone);
 }

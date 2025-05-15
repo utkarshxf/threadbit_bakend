@@ -24,7 +24,11 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .username(userDto.getUsername())
                 .email(userDto.getEmail())
-                .password(userDto.getPassword()) // Consider encrypting password before saving
+                .phoneNumber(userDto.getPhoneNumber())
+                .socialMedia(userDto.getSocialMedia())
+                .walletBalance(userDto.getWalletBalance())
+                .avatarUrl(userDto.getAvatarUrl())
+                .password(userDto.getPassword())
                 .build();
         
         // Save the user
@@ -49,13 +53,20 @@ public class UserServiceImpl implements UserService {
         
         return convertToResponseDto(user);
     }
-    
+
+    @Override
+    public UserResponseDto getUserByPhone(String phone) {
+        User user = userRepository.findByPhoneNumber(phone)
+                .orElseThrow(() -> new EntityNotFoundException("User phone found with phone: " + phone));
+
+        return convertToResponseDto(user);
+    }
+
     private UserResponseDto convertToResponseDto(User user) {
         return UserResponseDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                // Don't include password in response
                 .build();
     }
 }

@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -20,6 +22,9 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ItemDto {
+
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     
     @NotBlank(message = "Title is required")
@@ -51,7 +56,7 @@ public class ItemDto {
     private String sellerId;
     
     @NotBlank(message = "Category ID is required")
-    private String categoryId;
+    private Integer categoryId;
     
     @NotNull(message = "End time is required")
     private LocalDateTime endTime;

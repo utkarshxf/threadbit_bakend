@@ -34,7 +34,7 @@ public class Item {
     @DBRef(lazy = true)
     private User seller;
 
-    private String categoryId;
+    private Integer categoryId;
     @DBRef(lazy = true)
     private Category category;
 

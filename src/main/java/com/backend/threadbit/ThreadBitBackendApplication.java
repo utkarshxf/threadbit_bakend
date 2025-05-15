@@ -30,9 +30,10 @@ public class ThreadBitBackendApplication {
                 );
 
                 // Create categories
-                for (String categoryName : categories) {
+                for (int i = 0 ; i < categories.size() ; i++) {
                     Category category = Category.builder()
-                            .name(categoryName)
+                            .name(categories.get(i))
+                            .id(i+1)
                             .build();
                     categoryRepository.save(category);
                 }

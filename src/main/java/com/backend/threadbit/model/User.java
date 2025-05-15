@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -22,7 +24,10 @@ public class User {
 
     @Indexed(unique = true)
     private String username;
-
+    private String name;
+    private String walletBalance;
+    private String phoneNumber;
+    private List<Map<String , String>> socialMedia;
     private String email;
     private String password;
     private String avatarUrl;

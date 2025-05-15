@@ -10,6 +10,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 @Data
 @NoArgsConstructor
@@ -25,6 +27,15 @@ public class UserDto {
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
     private String email;
+
+    @NotBlank(message = "PhoneNumber is required")
+    private String phoneNumber;
+
+    private String walletBalance;
+
+
+    private List<Map<String,String>> socialMedia;
+
     
     @NotBlank(message = "Password is required")
     @Size(min = 6, message = "Password must be at least 6 characters")

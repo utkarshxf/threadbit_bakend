@@ -53,6 +53,39 @@ public class UserController {
                     .body(new ErrorResponse("Internal server error"));
         }
     }
+    @GetMapping("phoneNumber/{phone}")
+    public ResponseEntity<?> getUserByPhone(@PathVariable String Phone) {
+        try {
+            UserResponseDto user = userService.getUserByPhone(Phone);
+            return ResponseEntity.ok(user);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("User not found"));
+        } catch (Exception e) {
+            log.error("Error getting user", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Internal server error"));
+        }
+    }
+
+    @GetMapping("exist/{phone}")
+    public ResponseEntity<?> ExistPhone(@PathVariable String Phone) {
+        try {
+            UserResponseDto user = userService.getUserByPhone(Phone);
+            if(user != null){
+                return ResponseEntity.ok(true);
+            }
+           return ResponseEntity.ok(false);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.ok(false);
+        } catch (Exception e) {
+            log.error("Error getting user", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Internal server error"));
+        }
+    }
+
+
 
     private static class ErrorResponse {
         private final String message;
