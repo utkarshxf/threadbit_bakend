@@ -42,6 +42,7 @@ public class DataInitializer {
                     .username("alice")
                     .email("alice@example.com")
                     .password("password123")
+                    .walletBalance("0")
                     .avatarUrl("https://randomuser.me/api/portraits/women/1.jpg")
                     .build();
             

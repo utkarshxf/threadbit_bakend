@@ -33,7 +33,6 @@ public class UserDto {
 
     private String walletBalance;
 
-
     private List<Map<String,String>> socialMedia;
 
     

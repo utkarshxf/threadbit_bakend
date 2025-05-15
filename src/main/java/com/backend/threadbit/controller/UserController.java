@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.NoSuchElementException;
 
@@ -25,7 +26,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> createUser(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<?> createUser(@RequestBody UserDto userDto) {
         try {
             UserResponseDto createdUser = userService.createUser(userDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
@@ -54,9 +55,9 @@ public class UserController {
         }
     }
     @GetMapping("phoneNumber/{phone}")
-    public ResponseEntity<?> getUserByPhone(@PathVariable String Phone) {
+    public ResponseEntity<?> getUserByPhone(@PathVariable String phone) {
         try {
-            UserResponseDto user = userService.getUserByPhone(Phone);
+            UserResponseDto user = userService.getUserByPhone(phone);
             return ResponseEntity.ok(user);
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -69,14 +70,14 @@ public class UserController {
     }
 
     @GetMapping("exist/{phone}")
-    public ResponseEntity<?> ExistPhone(@PathVariable String Phone) {
+    public ResponseEntity<?> ExistPhone(@PathVariable String phone) {
         try {
-            UserResponseDto user = userService.getUserByPhone(Phone);
+            UserResponseDto user = userService.getUserByPhone(phone);
             if(user != null){
                 return ResponseEntity.ok(true);
             }
            return ResponseEntity.ok(false);
-        } catch (NoSuchElementException e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.ok(false);
         } catch (Exception e) {
             log.error("Error getting user", e);

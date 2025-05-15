@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto getUserByPhone(String phone) {
         User user = userRepository.findByPhoneNumber(phone)
-                .orElseThrow(() -> new EntityNotFoundException("User phone found with phone: " + phone));
+                .orElseThrow(() -> new EntityNotFoundException("User phone not found with phone: " + phone));
 
         return convertToResponseDto(user);
     }
@@ -65,6 +65,11 @@ public class UserServiceImpl implements UserService {
     private UserResponseDto convertToResponseDto(User user) {
         return UserResponseDto.builder()
                 .id(user.getId())
+                .phoneNumber(user.getPhoneNumber())
+                .socialMedia(user.getSocialMedia())
+                .walletBalance(user.getWalletBalance())
+                .name(user.getName())
+                .avatarUrl(user.getAvatarUrl())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .build();
