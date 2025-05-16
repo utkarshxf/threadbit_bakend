@@ -69,6 +69,21 @@ public class UserController {
         }
     }
 
+    @GetMapping("username/{userName}")
+    public ResponseEntity<?> getUserByUserName(@PathVariable String userName) {
+        try {
+            UserResponseDto user = userService.getUserByUsername(userName);
+            return ResponseEntity.ok(user);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("User not found"));
+        } catch (Exception e) {
+            log.error("Error getting user", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Internal server error"));
+        }
+    }
+
     @GetMapping("exist/{phone}")
     public ResponseEntity<?> ExistPhone(@PathVariable String phone) {
         try {
