@@ -30,6 +30,9 @@ public class Item {
     private double currentPrice;
     private List<String> imageUrls;
 
+    private Integer originalPrice ;
+    private Integer buyNowPrice;
+
     private String sellerId;
     @DBRef(lazy = true)
     private User seller;

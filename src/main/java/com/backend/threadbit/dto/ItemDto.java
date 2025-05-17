@@ -63,4 +63,7 @@ public class ItemDto {
     
     private LocalDateTime createdAt;
     private Status status;
+
+    private Integer originalPrice ;
+    private Integer buyNowPrice;
 }

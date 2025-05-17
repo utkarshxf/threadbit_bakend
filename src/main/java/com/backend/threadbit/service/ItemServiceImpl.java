@@ -71,6 +71,8 @@ public class ItemServiceImpl implements ItemService {
                 .imageUrls(itemDto.getImageUrls())
                 .sellerId(itemDto.getSellerId())
                 .categoryId(itemDto.getCategoryId())
+                .originalPrice(itemDto.getOriginalPrice())
+                .buyNowPrice(itemDto.getBuyNowPrice())
                 .endTime(itemDto.getEndTime())
                 .status(Status.ACTIVE) // Default status
                 .build();
