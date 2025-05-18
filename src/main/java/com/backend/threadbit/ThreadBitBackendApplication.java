@@ -7,11 +7,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Arrays;
 import java.util.List;
 
-@CrossOrigin(originPatterns = "*")
+@CrossOrigin(
+        origins = {"https://secondhand-threads.vercel.app" , "http://192.168.32.1:5173" ,"http://localhost:5173" , "*"},
+        allowCredentials = "true",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
+        allowedHeaders = {"Content-Type", "Authorization"}
+)
 @SpringBootApplication
 public class ThreadBitBackendApplication {
 
