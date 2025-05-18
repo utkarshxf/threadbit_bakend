@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @CrossOrigin(
-        origins = {"https://secondhand-threads.vercel.app" , "http://192.168.32.1:5173" ,"http://localhost:5173" , "https://10.244.72.46:8080" },
+        origins = { "https://threadbitwebsite-fqj4l.ondigitalocean.app/" ,"https://secondhand-threads.vercel.app" , "http://192.168.32.1:5173" ,"http://localhost:5173" , "https://10.244.72.46:8080" },
         allowCredentials = "true",
         methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
         allowedHeaders = {"Content-Type", "Authorization"}
