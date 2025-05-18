@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(
-        origins = {"*","https://secondhand-threads.vercel.app" , "http://192.168.32.1:5173" ,"http://10.244.72.46:8080"},
+        origins = {"https://secondhand-threads.vercel.app" , "http://192.168.32.1:5173" ,"http://10.244.72.46:8080"},
         allowCredentials = "true",
         methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
         allowedHeaders = {"Content-Type", "Authorization"}
