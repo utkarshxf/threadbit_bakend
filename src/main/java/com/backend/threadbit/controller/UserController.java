@@ -1,7 +1,10 @@
 package com.backend.threadbit.controller;
 
 
+import com.backend.threadbit.dto.ReviewDto;
+import com.backend.threadbit.dto.ReviewResponseDto;
 import com.backend.threadbit.dto.UserDto;
+import com.backend.threadbit.dto.UserRatingDto;
 import com.backend.threadbit.service.UserService;
 import com.backend.threadbit.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -105,6 +109,56 @@ public class UserController {
                     .body(new ErrorResponse("Internal server error"));
         }
     }
+
+    @GetMapping("/{userId}/reviews")
+    public ResponseEntity<?> getUserReviews(@PathVariable String userId) {
+        try {
+            List<ReviewResponseDto> reviews = userService.getUserReviews(userId);
+            return ResponseEntity.ok(reviews);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("User not found"));
+        } catch (Exception e) {
+            log.error("Error getting user reviews", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Internal server error"));
+        }
+    }
+
+    @GetMapping("/{userId}/rating")
+    public ResponseEntity<?> getUserRating(@PathVariable String userId) {
+        try {
+            UserRatingDto rating = userService.getUserRating(userId);
+            return ResponseEntity.ok(rating);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse("User not found"));
+        } catch (Exception e) {
+            log.error("Error getting user rating", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Internal server error"));
+        }
+    }
+
+    @PostMapping("/{userId}/{reviewerId}/review")
+    public ResponseEntity<?> addReview(
+            @PathVariable String userId,
+            @PathVariable String reviewerId,
+            @Valid @RequestBody ReviewDto reviewDto) {
+        try {
+            ReviewResponseDto review = userService.addReview(userId, reviewerId, reviewDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(review);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error adding review", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Internal server error"));
+        }
+    }
+
+
 
 
 

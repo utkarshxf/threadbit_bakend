@@ -2,16 +2,31 @@ package com.backend.threadbit.service;
 
 
 import com.backend.threadbit.dto.ItemDto;
+import com.backend.threadbit.dto.PagedResponseDto;
 import com.backend.threadbit.model.Item;
 import com.backend.threadbit.model.Status;
 
 import java.util.List;
 
 public interface ItemService {
+    // Original methods
     List<Item> getAllItems();
     List<Item> getItemsByCategory(String categoryId);
     List<Item> getItemsBySeller(String sellerId);
     Item getItemById(String id);
     Item createItem(ItemDto itemDto);
     Item updateItemStatus(String id, Status status);
+
+    // Pagination methods
+    PagedResponseDto<Item> getAllItems(int page, int size, String sortBy, String sortDir);
+    PagedResponseDto<Item> getItemsByCategory(String categoryId, int page, int size, String sortBy, String sortDir);
+    PagedResponseDto<Item> getItemsBySeller(String sellerId, int page, int size, String sortBy, String sortDir);
+    PagedResponseDto<Item> getItemsByStatus(Status status, int page, int size, String sortBy, String sortDir);
+
+    // Search methods
+    PagedResponseDto<Item> searchItems(String keyword, int page, int size, String sortBy, String sortDir);
+
+    // Combined search and filter
+    PagedResponseDto<Item> getItems(String keyword, String categoryId, Status status, String sellerId, 
+                                   String sellerUsername, int page, int size, String sortBy, String sortDir);
 }

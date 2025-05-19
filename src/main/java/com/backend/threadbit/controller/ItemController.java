@@ -2,9 +2,11 @@ package com.backend.threadbit.controller;
 
 
 import com.backend.threadbit.dto.ItemDto;
+import com.backend.threadbit.dto.PagedResponseDto;
 import com.backend.threadbit.dto.StatusUpdateDto;
 import com.backend.threadbit.service.ItemService;
 import com.backend.threadbit.model.Item;
+import com.backend.threadbit.model.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +34,26 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public ResponseEntity<List<Item>> getItems(
+    public ResponseEntity<?> getItems(
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String categoryId,
-            @RequestParam(required = false) String sellerId) {
+            @RequestParam(required = false) Status status,
+            @RequestParam(required = false) String sellerId,
+            @RequestParam(required = false) String sellerUsername,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
         try {
+            // If pagination parameters are provided, use paginated response
+            if (page >= 0 && size > 0) {
+                PagedResponseDto<Item> pagedItems = itemService.getItems(
+                    keyword, categoryId, status, sellerId, sellerUsername, page, size, sortBy, sortDir);
+                return ResponseEntity.ok(pagedItems);
+            }
+
+            // Otherwise, use the original non-paginated response for backward compatibility
             List<Item> items;
-            
             if (categoryId != null) {
                 items = itemService.getItemsByCategory(categoryId);
             } else if (sellerId != null) {
@@ -45,10 +61,26 @@ public class ItemController {
             } else {
                 items = itemService.getAllItems();
             }
-            
+
             return ResponseEntity.ok(items);
         } catch (Exception e) {
             log.error("Error getting items", e);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchItems(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+        try {
+            PagedResponseDto<Item> pagedItems = itemService.searchItems(keyword, page, size, sortBy, sortDir);
+            return ResponseEntity.ok(pagedItems);
+        } catch (Exception e) {
+            log.error("Error searching items", e);
             return ResponseEntity.internalServerError().build();
         }
     }
