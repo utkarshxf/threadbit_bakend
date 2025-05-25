@@ -44,7 +44,7 @@ public class ItemController {
             @RequestParam(required = false) String sellerId,
             @RequestParam(required = false) String sellerUsername,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int size,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir) {
         try {
