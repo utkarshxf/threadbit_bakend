@@ -58,4 +58,11 @@ public interface ItemRepository extends MongoRepository<Item, String> {
     // Alternative: Get all items by IDs (for processing in service layer)
     @Query("{ '_id': { '$in': ?0 } }")
     List<Item> findItemsByIds(List<String> itemIds);
+
+    @Query("{ $and: [ " +
+            "{ 'itemType': 'INSTANT_BUY' }, " +
+            "{ 'status': 'ACTIVE' }, " +
+            "{ 'stockQuantity': { $gt: 0 } }, " +
+            "{ $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'description': { $regex: ?0, $options: 'i' } } ] } ] }")
+    Page<Item> searchAvailableInstantBuyItems(String keyword, Pageable pageable);
 }

@@ -4,10 +4,14 @@ package com.backend.threadbit.service;
 import com.backend.threadbit.repository.ItemRepository;
 import com.backend.threadbit.dto.ItemDto;
 import com.backend.threadbit.dto.PagedResponseDto;
+import com.backend.threadbit.dto.PurchaseDto;
 import com.backend.threadbit.model.Item;
+import com.backend.threadbit.model.ItemType;
+import com.backend.threadbit.model.Purchase;
 import com.backend.threadbit.model.Status;
 import com.backend.threadbit.model.User;
 import com.backend.threadbit.repository.CategoryRepository;
+import com.backend.threadbit.repository.PurchaseRepository;
 import com.backend.threadbit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +38,8 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     @Autowired
     private final CategoryRepository categoryRepository;
+    @Autowired
+    private final PurchaseRepository purchaseRepository;
 
     @Override
     public List<Item> getAllItems() {
@@ -75,7 +81,7 @@ public class ItemServiceImpl implements ItemService {
                 .condition(itemDto.getCondition())
                 .color(itemDto.getColor())
                 .startingPrice(itemDto.getStartingPrice())
-                .currentPrice(itemDto.getStartingPrice()) // Initially set to starting price
+                .currentPrice(itemDto.getStartingPrice())
                 .imageUrls(itemDto.getImageUrls())
                 .sellerId(itemDto.getSellerId())
                 .categoryId(itemDto.getCategoryId())
@@ -199,5 +205,135 @@ public class ItemServiceImpl implements ItemService {
                 .totalPages(page.getTotalPages())
                 .last(page.isLast())
                 .build();
+    }
+
+    private <T> PagedResponseDto<T> createGenericPagedResponse(Page<T> page) {
+        return PagedResponseDto.<T>builder()
+                .content(page.getContent())
+                .pageNumber(page.getNumber())
+                .pageSize(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .last(page.isLast())
+                .build();
+    }
+
+    @Override
+    public Item createInstantBuyItem(ItemDto itemDto) {
+        // Validate that seller exists
+        userRepository.findById(itemDto.getSellerId())
+                .orElseThrow(() -> new NoSuchElementException("Seller not found"));
+
+        // Validate that category exists
+        categoryRepository.findById(itemDto.getCategoryId())
+                .orElseThrow(() -> new NoSuchElementException("Category not found"));
+
+        // Validate instant buy specific fields
+        if (itemDto.getBuyNowPrice() == null || itemDto.getBuyNowPrice() <= 0) {
+            throw new IllegalArgumentException("Buy now price is required and must be positive");
+        }
+
+        if (itemDto.getStockQuantity() == null || itemDto.getStockQuantity() <= 0) {
+            throw new IllegalArgumentException("Stock quantity is required and must be positive");
+        }
+
+        // Create and save the item
+        Item item = Item.builder()
+                .title(itemDto.getTitle())
+                .description(itemDto.getDescription())
+                .brand(itemDto.getBrand())
+                .size(itemDto.getSize())
+                .condition(itemDto.getCondition())
+                .color(itemDto.getColor())
+                .startingPrice(itemDto.getStartingPrice() != null ? itemDto.getStartingPrice() : 0)
+                .currentPrice(itemDto.getStartingPrice() != null ? itemDto.getStartingPrice() : 0)
+                .imageUrls(itemDto.getImageUrls())
+                .sellerId(itemDto.getSellerId())
+                .categoryId(itemDto.getCategoryId())
+                .originalPrice(itemDto.getOriginalPrice())
+                .buyNowPrice(itemDto.getBuyNowPrice())
+                .itemType(ItemType.INSTANT_BUY)
+                .stockQuantity(itemDto.getStockQuantity())
+                .soldQuantity(0)
+                .status(Status.ACTIVE)
+                .build();
+
+        return itemRepository.save(item);
+    }
+
+    @Override
+    public Purchase purchaseItem(PurchaseDto purchaseDto) {
+        // Validate that item exists and is available for purchase
+        Item item = itemRepository.findById(purchaseDto.getItemId())
+                .orElseThrow(() -> new NoSuchElementException("Item not found"));
+
+        // Check if item is an instant buy item
+        if (item.getItemType() != ItemType.INSTANT_BUY) {
+            throw new IllegalArgumentException("Item is not available for instant purchase");
+        }
+
+        // Check if item is active
+        if (item.getStatus() != Status.ACTIVE) {
+            throw new IllegalArgumentException("Item is not active");
+        }
+
+        // Check if there's enough stock
+        if (item.getStockQuantity() < purchaseDto.getQuantity()) {
+            throw new IllegalArgumentException("Not enough stock available");
+        }
+
+        // Validate that buyer exists
+        userRepository.findById(purchaseDto.getBuyerId())
+                .orElseThrow(() -> new NoSuchElementException("Buyer not found"));
+
+        // Calculate total price
+        Integer pricePerUnit = item.getBuyNowPrice();
+        Integer totalPrice = pricePerUnit * purchaseDto.getQuantity();
+
+        // Create purchase record
+        Purchase purchase = Purchase.builder()
+                .itemId(item.getId())
+                .buyerId(purchaseDto.getBuyerId())
+                .quantity(purchaseDto.getQuantity())
+                .pricePerUnit(pricePerUnit)
+                .totalPrice(totalPrice)
+                .status(Status.COMPLETED)
+                .build();
+
+        // Update item stock
+        item.setStockQuantity(item.getStockQuantity() - purchaseDto.getQuantity());
+        item.setSoldQuantity(item.getSoldQuantity() + purchaseDto.getQuantity());
+
+        // If stock is depleted, mark item as ended
+        if (item.getStockQuantity() <= 0) {
+            item.setStatus(Status.ENDED);
+        }
+
+        // Save updated item
+        itemRepository.save(item);
+
+        // Save and return purchase
+        return purchaseRepository.save(purchase);
+    }
+
+    @Override
+    public List<Purchase> getPurchasesByBuyer(String buyerId) {
+        return purchaseRepository.findByBuyerId(buyerId);
+    }
+
+    @Override
+    public PagedResponseDto<Purchase> getPurchasesByBuyer(String buyerId, int page, int size, String sortBy, String sortDir) {
+        Sort sort = createSort(sortBy, sortDir);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Purchase> purchasePage = purchaseRepository.findByBuyerId(buyerId, pageable);
+        return createGenericPagedResponse(purchasePage);
+    }
+
+    @Override
+    public PagedResponseDto<Item> getAvailableInstantBuyItems(String keyword, int page, int size, String sortBy, String sortDir) {
+        Sort sort = createSort(sortBy, sortDir);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Item> itemPage = itemRepository.searchAvailableInstantBuyItems(keyword, pageable);
+        return createPagedResponse(itemPage);
     }
 }

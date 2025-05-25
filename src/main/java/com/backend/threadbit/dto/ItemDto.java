@@ -2,6 +2,7 @@ package com.backend.threadbit.dto;
 
 
 import com.backend.threadbit.model.Condition;
+import com.backend.threadbit.model.ItemType;
 import com.backend.threadbit.model.Size;
 import com.backend.threadbit.model.Status;
 import lombok.AllArgsConstructor;
@@ -66,4 +67,19 @@ public class ItemDto {
 
     private Integer originalPrice ;
     private Integer buyNowPrice;
+
+    @Builder.Default
+    private ItemType itemType = ItemType.AUCTION;
+
+    @Positive(message = "Stock quantity must be positive")
+    private Integer stockQuantity = 1;
+
+    public boolean isValid() {
+        if (itemType == ItemType.AUCTION) {
+            return endTime != null;
+        } else if (itemType == ItemType.INSTANT_BUY) {
+            return buyNowPrice != null && buyNowPrice > 0 && stockQuantity != null && stockQuantity > 0;
+        }
+        return true;
+    }
 }

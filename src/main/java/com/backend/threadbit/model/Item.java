@@ -30,9 +30,6 @@ public class Item {
     private double currentPrice;
     private List<String> imageUrls;
 
-    private Integer originalPrice ;
-    private Integer buyNowPrice;
-
     private String sellerId;
     @DBRef(lazy = true)
     private User seller;
@@ -47,4 +44,17 @@ public class Item {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     private Status status;
+
+    // NEW FIELDS FOR INSTANT BUY
+    @Builder.Default
+    private ItemType itemType = ItemType.AUCTION;
+
+    @Builder.Default
+    private Integer stockQuantity = 1;
+
+    @Builder.Default
+    private Integer soldQuantity = 0;
+
+    private Integer originalPrice ;
+    private Integer buyNowPrice;
 }
