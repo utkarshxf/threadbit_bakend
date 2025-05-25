@@ -189,7 +189,7 @@ public class ItemController {
     public ResponseEntity<?> getPurchasesByBuyer(
             @PathVariable String buyerId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "0") int size,
             @RequestParam(defaultValue = "purchaseDate") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir) {
         try {
