@@ -3,6 +3,7 @@ package com.backend.threadbit.service;
 
 import com.backend.threadbit.dto.ItemDto;
 import com.backend.threadbit.dto.PagedResponseDto;
+import com.backend.threadbit.model.Bid;
 import com.backend.threadbit.model.Item;
 import com.backend.threadbit.model.Status;
 

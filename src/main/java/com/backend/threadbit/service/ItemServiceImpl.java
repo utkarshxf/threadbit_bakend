@@ -183,6 +183,7 @@ public class ItemServiceImpl implements ItemService {
         return createPagedResponse(itemPage);
     }
 
+
     private Sort createSort(String sortBy, String sortDir) {
         Sort sort = Sort.by(sortBy);
         sort = sortDir.equalsIgnoreCase("asc") ? sort.ascending() : sort.descending();

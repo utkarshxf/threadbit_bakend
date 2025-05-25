@@ -1,5 +1,6 @@
 package com.backend.threadbit.repository;
 
+import com.backend.threadbit.model.Item;
 import com.backend.threadbit.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

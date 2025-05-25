@@ -4,6 +4,7 @@ package com.backend.threadbit.controller;
 import com.backend.threadbit.dto.ItemDto;
 import com.backend.threadbit.dto.PagedResponseDto;
 import com.backend.threadbit.dto.StatusUpdateDto;
+import com.backend.threadbit.model.Bid;
 import com.backend.threadbit.service.ItemService;
 import com.backend.threadbit.model.Item;
 import com.backend.threadbit.model.Status;

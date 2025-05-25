@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -39,4 +40,22 @@ public interface ItemRepository extends MongoRepository<Item, String> {
     // Find by seller username (requires join with User collection)
     @Query("{ 'sellerId': { $in: ?0 } }")
     Page<Item> findBySellerIds(List<String> sellerIds, Pageable pageable);
+
+
+    // Get items where user is bidding (auction not ended)
+
+    @Query("{ 'endTime': { '$gt': ?1 }, '_id': { '$in': ?0 } }")
+    List<Item> getActiveBidItemsByUserId(List<String> itemIds, LocalDateTime currentTime);
+
+    // Get items where user won (auction ended and user has highest bid)
+    @Query("{ 'endTime': { '$lt': ?1 }, '_id': { '$in': ?0 } }")
+    List<Item> getWonItemsByUserId(List<String> itemIds, LocalDateTime currentTime);
+
+    // Get items where user lost (auction ended and user doesn't have highest bid)
+    @Query("{ 'endTime': { '$lt': ?1 }, '_id': { '$in': ?0 } }")
+    List<Item> getLostItemsByUserId(List<String> itemIds, LocalDateTime currentTime);
+
+    // Alternative: Get all items by IDs (for processing in service layer)
+    @Query("{ '_id': { '$in': ?0 } }")
+    List<Item> findItemsByIds(List<String> itemIds);
 }
