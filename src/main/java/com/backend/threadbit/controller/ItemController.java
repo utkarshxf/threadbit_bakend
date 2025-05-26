@@ -61,7 +61,9 @@ public class ItemController {
                 items = itemService.getItemsByCategory(categoryId);
             } else if (sellerId != null) {
                 items = itemService.getItemsBySeller(sellerId);
-            } else {
+            } else if(sellerUsername != null) {
+                items = itemService.getItemByUsername(sellerUsername);
+            }else{
                 items = itemService.getAllItems();
             }
 

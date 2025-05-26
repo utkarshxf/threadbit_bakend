@@ -16,6 +16,7 @@ public interface ItemService {
     List<Item> getAllItems();
     List<Item> getItemsByCategory(String categoryId);
     List<Item> getItemsBySeller(String sellerId);
+    List<Item> getItemByUsername(String sellerUsername);
     Item getItemById(String id);
     Item createItem(ItemDto itemDto);
     Item updateItemStatus(String id, Status status);
@@ -39,4 +40,5 @@ public interface ItemService {
     List<Purchase> getPurchasesByBuyer(String buyerId);
     PagedResponseDto<Purchase> getPurchasesByBuyer(String buyerId, int page, int size, String sortBy, String sortDir);
     PagedResponseDto<Item> getAvailableInstantBuyItems(String keyword, int page, int size, String sortBy, String sortDir);
+
 }

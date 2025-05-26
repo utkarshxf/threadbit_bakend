@@ -22,9 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,6 +52,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> getItemsBySeller(String sellerId) {
         return itemRepository.findBySellerId(sellerId);
+    }
+
+    @Override
+    public List<Item> getItemByUsername(String sellerUsername) {
+        Optional<User> seller = userRepository.findByUsername(sellerUsername);
+        if(seller.isPresent()) return itemRepository.findBySellerId(seller.get().getId());
+        return Collections.emptyList();
     }
 
     @Override
