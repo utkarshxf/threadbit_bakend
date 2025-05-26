@@ -14,6 +14,7 @@ public interface UserService {
     UserResponseDto getUserById(String id);
     UserResponseDto getUserByUsername(String username);
     UserResponseDto getUserByPhone(String phone);
+    UserResponseDto updateUser(String id, UserDto userDto);
 
     // Review related methods
     List<ReviewResponseDto> getUserReviews(String userId);

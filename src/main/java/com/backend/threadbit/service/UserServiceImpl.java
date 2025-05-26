@@ -77,6 +77,42 @@ public class UserServiceImpl implements UserService {
         return convertToResponseDto(user);
     }
 
+    @Override
+    public UserResponseDto updateUser(String id, UserDto userDto) {
+        // Verify user exists
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+        // Update user fields
+        if (userDto.getUsername() != null) {
+            existingUser.setUsername(userDto.getUsername());
+        }
+        if (userDto.getEmail() != null) {
+            existingUser.setEmail(userDto.getEmail());
+        }
+        if (userDto.getPhoneNumber() != null) {
+            existingUser.setPhoneNumber(userDto.getPhoneNumber());
+        }
+        if (userDto.getWalletBalance() != null) {
+            existingUser.setWalletBalance(userDto.getWalletBalance());
+        }
+        if (userDto.getSocialMedia() != null) {
+            existingUser.setSocialMedia(userDto.getSocialMedia());
+        }
+        if (userDto.getPassword() != null) {
+            existingUser.setPassword(userDto.getPassword());
+        }
+        if (userDto.getAvatarUrl() != null) {
+            existingUser.setAvatarUrl(userDto.getAvatarUrl());
+        }
+
+        // Save the updated user
+        User updatedUser = userRepository.save(existingUser);
+
+        // Convert and return as UserResponseDto
+        return convertToResponseDto(updatedUser);
+    }
+
     private UserResponseDto convertToResponseDto(User user) {
         return UserResponseDto.builder()
                 .id(user.getId())
