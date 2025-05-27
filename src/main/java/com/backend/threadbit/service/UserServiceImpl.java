@@ -37,6 +37,8 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto createUser(UserDto userDto) {
         // Convert UserDto to User entity
         User user = User.builder()
+                .id(userDto.getId())
+                .name(userDto.getName())
                 .username(userDto.getUsername())
                 .email(userDto.getEmail())
                 .phoneNumber(userDto.getPhoneNumber())
