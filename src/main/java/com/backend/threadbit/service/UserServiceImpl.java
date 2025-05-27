@@ -89,6 +89,9 @@ public class UserServiceImpl implements UserService {
         if (userDto.getUsername() != null) {
             existingUser.setUsername(userDto.getUsername());
         }
+        if (userDto.getName() != null) {
+            existingUser.setName(userDto.getName());
+        }
         if (userDto.getEmail() != null) {
             existingUser.setEmail(userDto.getEmail());
         }
