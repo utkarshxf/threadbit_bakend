@@ -23,4 +23,5 @@ public class UserResponseDto {
     private String email;
     private String password;
     private String avatarUrl;
+    private List<LocationDto> locations;
 }

@@ -1,6 +1,7 @@
 package com.backend.threadbit.service;
 
 
+import com.backend.threadbit.dto.LocationDto;
 import com.backend.threadbit.dto.ReviewDto;
 import com.backend.threadbit.dto.ReviewResponseDto;
 import com.backend.threadbit.dto.UserDto;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private final UserRatingRepository userRatingRepository;
+
+    @Autowired
+    private final LocationService locationService;
     @Override
     public UserResponseDto createUser(UserDto userDto) {
         // Convert UserDto to User entity
@@ -119,6 +124,15 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserResponseDto convertToResponseDto(User user) {
+        // Get user's locations
+        List<LocationDto> locations = new ArrayList<>();
+        try {
+            locations = locationService.getUserLocations(user.getId());
+        } catch (Exception e) {
+            log.error("Error getting user locations", e);
+            // Continue with empty locations list
+        }
+
         return UserResponseDto.builder()
                 .id(user.getId())
                 .phoneNumber(user.getPhoneNumber())
@@ -128,6 +142,7 @@ public class UserServiceImpl implements UserService {
                 .avatarUrl(user.getAvatarUrl())
                 .username(user.getUsername())
                 .email(user.getEmail())
+                .locations(locations)
                 .build();
     }
 
