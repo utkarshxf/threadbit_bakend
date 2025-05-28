@@ -143,7 +143,7 @@ public class BidServiceImpl implements BidService {
                 userService.updateUser(seller.getId(), sellerDto);
             } else {
                 userDto = UserDto.builder()
-                        .walletBalance(String.valueOf(previousHighestBid.getAmount() + Double.parseDouble(user.getWalletBalance())))
+                        .walletBalance(String.valueOf(previousHighestBid.getAmount() + Double.parseDouble(userDto.getWalletBalance())))
                         .build();
                 userService.updateUser(user.getId(), userDto);
                 double sellerBalance;
