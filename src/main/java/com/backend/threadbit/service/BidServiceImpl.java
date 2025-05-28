@@ -105,15 +105,14 @@ public class BidServiceImpl implements BidService {
             }
         }
 
-        // Subtract bid amount from user's wallet
-        double newUserBalance = walletBalance - bidDto.getAmount();
-        UserDto userDto = UserDto.builder()
-                .walletBalance(String.valueOf(newUserBalance))
-                .build();
-        userService.updateUser(user.getId(), userDto);
-
         // Handle previous bidder and seller
         if (!bidDto.getUserId().equals(item.getSellerId())) {
+            // Subtract bid amount from user's wallet
+            double newUserBalance = walletBalance - bidDto.getAmount();
+            UserDto userDto = UserDto.builder()
+                    .walletBalance(String.valueOf(newUserBalance))
+                    .build();
+            userService.updateUser(user.getId(), userDto);
             if (previousBidder != null) {
                 if (!previousBidder.getId().equals(user.getId())) {
                     // Return the previous bid amount to the previous bidder (only if it's not the same user)
