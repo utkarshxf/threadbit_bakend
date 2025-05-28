@@ -171,28 +171,23 @@ public class LocationServiceImpl implements LocationService {
     // For backward compatibility
     @Override
     public LocationDto saveUserLocation(String userId, LocationDto locationDto) {
-        // Get all user's locations
-        List<Location> existingLocations = locationRepository.findByUserId(userId);
+        // Always create a new location instead of updating existing ones
+        // This ensures that multiple locations can be saved for a user
 
-        // If user has a current location, update it
-        Location currentLocation = existingLocations.stream()
-                .filter(loc -> Boolean.TRUE.equals(loc.getIsCurrentLocation()))
-                .findFirst()
-                .orElse(null);
-
-        if (currentLocation != null) {
-            // Update existing current location
-            locationDto.setId(currentLocation.getId());
-            return updateUserLocation(currentLocation.getId(), locationDto);
-        } else if (!existingLocations.isEmpty()) {
-            // Update the first location and set it as current
-            locationDto.setIsCurrentLocation(true);
-            return updateUserLocation(existingLocations.get(0).getId(), locationDto);
+        // If isCurrentLocation is true, we need to unset any other current locations
+        if (Boolean.TRUE.equals(locationDto.getIsCurrentLocation())) {
+            unsetCurrentLocations(userId);
         } else {
-            // Create a new location
-            locationDto.setIsCurrentLocation(true);
-            return addUserLocation(userId, locationDto);
+            // If not explicitly set as current, check if this is the first location
+            List<Location> existingLocations = locationRepository.findByUserId(userId);
+            if (existingLocations.isEmpty()) {
+                // If this is the first location, set it as current
+                locationDto.setIsCurrentLocation(true);
+            }
         }
+
+        // Create a new location
+        return addUserLocation(userId, locationDto);
     }
 
     // For backward compatibility
