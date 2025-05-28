@@ -1,6 +1,7 @@
 package com.backend.threadbit.service;
 
 
+import com.backend.threadbit.dto.UserDto;
 import com.backend.threadbit.repository.ItemRepository;
 import com.backend.threadbit.dto.ItemDto;
 import com.backend.threadbit.dto.PagedResponseDto;
@@ -38,6 +39,8 @@ public class ItemServiceImpl implements ItemService {
     private final CategoryRepository categoryRepository;
     @Autowired
     private final PurchaseRepository purchaseRepository;
+    @Autowired
+    private final UserService userService;
 
     @Override
     public List<Item> getAllItems() {
@@ -288,12 +291,36 @@ public class ItemServiceImpl implements ItemService {
         }
 
         // Validate that buyer exists
-        userRepository.findById(purchaseDto.getBuyerId())
+        User buyer = userRepository.findById(purchaseDto.getBuyerId())
                 .orElseThrow(() -> new NoSuchElementException("Buyer not found"));
+
+        User seller = userRepository.findById(item.getSellerId())
+                .orElseThrow(() -> new NoSuchElementException("Seller not found"));
+
+        if(seller.getId().equals(buyer.getId())) {
+            throw new IllegalArgumentException("Cannot purchase own item");
+        }
 
         // Calculate total price
         Integer pricePerUnit = item.getBuyNowPrice();
         Integer totalPrice = pricePerUnit * purchaseDto.getQuantity();
+
+        if(totalPrice < Double.parseDouble(buyer.getWalletBalance())) {
+            throw new IllegalArgumentException("Insufficient funds in wallet");
+        }
+        // Update buyer's wallet balance
+        double newBuyerBalance = Double.parseDouble(buyer.getWalletBalance()) - totalPrice;
+        UserDto buyerDto = UserDto.builder()
+                .walletBalance(String.valueOf(newBuyerBalance))
+                .build();
+        userService.updateUser(buyer.getId(), buyerDto);
+
+        // Update seller's wallet balance
+        double newSellerBalance = Double.parseDouble(seller.getWalletBalance()) + totalPrice;
+        UserDto sellerDto = UserDto.builder()
+                .walletBalance(String.valueOf(newSellerBalance))
+                .build();
+        userService.updateUser(seller.getId(), sellerDto);
 
         // Create purchase record
         Purchase purchase = Purchase.builder()
