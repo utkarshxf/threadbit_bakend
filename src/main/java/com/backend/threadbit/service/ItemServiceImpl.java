@@ -305,7 +305,7 @@ public class ItemServiceImpl implements ItemService {
         Integer pricePerUnit = item.getBuyNowPrice();
         Integer totalPrice = pricePerUnit * purchaseDto.getQuantity();
 
-        if(totalPrice < Double.parseDouble(buyer.getWalletBalance())) {
+        if(totalPrice > Double.parseDouble(buyer.getWalletBalance())) {
             throw new IllegalArgumentException("Insufficient funds in wallet");
         }
         // Update buyer's wallet balance
