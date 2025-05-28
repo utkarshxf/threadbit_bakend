@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -71,14 +72,14 @@ public class BidServiceImpl implements BidService {
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
 
         // Check if user has sufficient wallet balance
-        double walletBalance;
+        double currentUserwalletBalance;
         try {
-            walletBalance = Double.parseDouble(user.getWalletBalance());
+            currentUserwalletBalance = Double.parseDouble(user.getWalletBalance());
         } catch (NumberFormatException e) {
-            walletBalance = 0.0;
+            currentUserwalletBalance = 0.0;
         }
 
-        if (walletBalance < bidDto.getAmount()) {
+        if (currentUserwalletBalance < bidDto.getAmount()) {
             throw new IllegalStateException("Insufficient wallet balance to place bid");
         }
 
@@ -89,35 +90,33 @@ public class BidServiceImpl implements BidService {
         // Check if there's a previous bid
         List<Bid> previousBids = bidRepository.findByItemId(bidDto.getItemId());
         Bid previousHighestBid = null;
-        User previousBidder = null;
+        User previousHighestBidder = null;
 
         if (!previousBids.isEmpty()) {
             // Find the highest previous bid
             previousHighestBid = previousBids.stream()
-                    .max((b1, b2) -> Double.compare(b1.getAmount(), b2.getAmount()))
+                    .max(Comparator.comparingDouble(Bid::getAmount))
                     .orElse(null);
 
             if (previousHighestBid != null) {
                 // Get the previous bidder
-                previousBidder = userRepository.findById(previousHighestBid.getUserId())
+                previousHighestBidder = userRepository.findById(previousHighestBid.getUserId())
                         .orElse(null);
             }
         }
 
         // Subtract bid amount from user's wallet
-        double newUserBalance = walletBalance - bidDto.getAmount();
+        double newUserBalance = currentUserwalletBalance - bidDto.getAmount();
         UserDto userDto = UserDto.builder()
                 .walletBalance(String.valueOf(newUserBalance))
                 .build();
         userService.updateUser(user.getId(), userDto);
 
         // Handle previous bidder and seller
-        if (previousBidder != null) {
-            if (!previousBidder.getId().equals(user.getId())) {
-                // Return the previous bid amount to the previous bidder (only if it's not the same user)
+        if (previousHighestBidder != null) {
                 double previousBidderBalance;
                 try {
-                    previousBidderBalance = Double.parseDouble(previousBidder.getWalletBalance());
+                    previousBidderBalance = Double.parseDouble(previousHighestBidder.getWalletBalance());
                 } catch (NumberFormatException e) {
                     previousBidderBalance = 0.0;
                 }
@@ -126,7 +125,7 @@ public class BidServiceImpl implements BidService {
                 UserDto previousBidderDto = UserDto.builder()
                         .walletBalance(String.valueOf(newPreviousBidderBalance))
                         .build();
-                userService.updateUser(previousBidder.getId(), previousBidderDto);
+                userService.updateUser(previousHighestBidder.getId(), previousBidderDto);
 
                 // Add the difference between current bid and previous bid to seller
                 double sellerBalance;
@@ -141,21 +140,7 @@ public class BidServiceImpl implements BidService {
                         .walletBalance(String.valueOf(newSellerBalance))
                         .build();
                 userService.updateUser(seller.getId(), sellerDto);
-            } else {
-                // Same user is bidding again, only add the difference to seller
-                double sellerBalance;
-                try {
-                    sellerBalance = Double.parseDouble(seller.getWalletBalance());
-                } catch (NumberFormatException e) {
-                    sellerBalance = 0.0;
-                }
 
-                double newSellerBalance = sellerBalance + (bidDto.getAmount() - previousHighestBid.getAmount());
-                UserDto sellerDto = UserDto.builder()
-                        .walletBalance(String.valueOf(newSellerBalance))
-                        .build();
-                userService.updateUser(seller.getId(), sellerDto);
-            }
         } else {
             // No previous bid, add all amount to seller
             double sellerBalance;
