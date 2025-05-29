@@ -87,7 +87,7 @@ public class DataInitializer {
                     ))
                     .sellerId(user1.getId())
                     .categoryId(categories.get(3).getId()) // Outerwear
-                    .endTime(LocalDateTime.now().plusDays(7))
+                    .endTime(LocalDateTime.now().plusDays(7).toInstant(java.time.ZoneOffset.UTC))
                     .status(Status.ACTIVE)
                     .build();
             
@@ -106,7 +106,7 @@ public class DataInitializer {
                     ))
                     .sellerId(user2.getId())
                     .categoryId(categories.get(5).getId()) // Shoes
-                    .endTime(LocalDateTime.now().plusDays(5))
+                    .endTime(LocalDateTime.now().plusDays(5).toInstant(java.time.ZoneOffset.UTC))
                     .status(Status.ACTIVE)
                     .build();
             

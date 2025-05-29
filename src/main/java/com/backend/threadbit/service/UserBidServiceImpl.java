@@ -70,7 +70,7 @@ public class UserBidServiceImpl implements UserBidService {
             BidGroupResult bidGroup = bidGroupMap.get(userBid.getItemId());
             if (bidGroup == null) continue;
 
-            boolean isAuctionEnded = now.isAfter(item.getEndTime());
+            boolean isAuctionEnded = now.isAfter(LocalDateTime.parse(item.getEndTime().toString()));
             boolean isUserWinning = bidGroup.getHighestBid().getUserId().equals(userId);
             
             // Calculate user's rank

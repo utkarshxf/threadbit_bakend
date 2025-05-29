@@ -10,8 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,7 +38,7 @@ public class AuctionCompletionService {
      * Identifies auctions that have ended but haven't been processed yet
      * Determines winners and sends notifications
      */
-    @Scheduled(fixedRate = 3600000) // Run every hour (3600000 ms)
+    @Scheduled(fixedRate = 900000) // Run every hour (3600000 ms)
     public void checkEndedAuctions() {
         log.info("Checking for ended auctions...");
 
@@ -45,7 +47,6 @@ public class AuctionCompletionService {
 
         if (endedAuctions.isEmpty()) {
             log.info("No ended auctions found.");
-//            emailService.sendSimpleEmail("utkarshxf@gmail.com", "No auctions have ended yet." , "");
             return;
         }
 
@@ -62,7 +63,7 @@ public class AuctionCompletionService {
      * @return List of ended auction items
      */
     private List<Item> findEndedAuctions() {
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = LocalDateTime.now().toInstant(java.time.ZoneOffset.UTC);
 
         // Find items where:
         // 1. Item type is AUCTION

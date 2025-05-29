@@ -98,7 +98,7 @@ public class ItemServiceImpl implements ItemService {
                 .categoryId(itemDto.getCategoryId())
                 .originalPrice(itemDto.getOriginalPrice())
                 .buyNowPrice(itemDto.getBuyNowPrice())
-                .endTime(itemDto.getEndTime())
+                .endTime(itemDto.getEndTime().toInstant(java.time.ZoneOffset.UTC))
                 .status(Status.ACTIVE) // Default status
                 .build();
 
