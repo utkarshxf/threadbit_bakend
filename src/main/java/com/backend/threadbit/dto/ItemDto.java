@@ -1,10 +1,7 @@
 package com.backend.threadbit.dto;
 
 
-import com.backend.threadbit.model.Condition;
-import com.backend.threadbit.model.ItemType;
-import com.backend.threadbit.model.Size;
-import com.backend.threadbit.model.Status;
+import com.backend.threadbit.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -55,6 +52,8 @@ public class ItemDto {
     
     @NotBlank(message = "Seller ID is required")
     private String sellerId;
+
+    private User seller;
     
     @NotBlank(message = "Category ID is required")
     private Integer categoryId;
