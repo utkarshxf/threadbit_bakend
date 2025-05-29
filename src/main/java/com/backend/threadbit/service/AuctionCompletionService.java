@@ -31,14 +31,13 @@ public class AuctionCompletionService {
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
     private final NotificationService notificationService;
-     private final EmailService emailService;
 
     /**
      * Scheduled task that runs every hour to check for ended auctions
      * Identifies auctions that have ended but haven't been processed yet
      * Determines winners and sends notifications
      */
-    @Scheduled(fixedRate = 900000) // Run every hour (3600000 ms)
+    @Scheduled(fixedRate = 900000) // Run every 15 mins
     public void checkEndedAuctions() {
         log.info("Checking for ended auctions...");
 
