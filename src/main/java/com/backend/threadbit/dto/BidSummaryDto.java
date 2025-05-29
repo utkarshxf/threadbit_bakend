@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @NoArgsConstructor
@@ -19,7 +20,7 @@ public class BidSummaryDto {
     private double currentPrice;
     private boolean isWinning;
     private int userRank;
-    private LocalDateTime endTime;
+    private ZonedDateTime endTime;
     private LocalDateTime bidCreatedAt;
     private String status; // "ACTIVE", "WON", "LOST"
 }

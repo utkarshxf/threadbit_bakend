@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,17 +28,17 @@ public class DataInitializer {
             CategoryRepository categoryRepository,
             ItemRepository itemRepository,
             BidRepository bidRepository) {
-        
+
         return args -> {
             // Check if we already have users (to avoid duplicate data on restarts)
             if (userRepository.count() > 0) {
                 log.info("Database already populated with test data");
                 return;
             }
-            
+
             log.info("Initializing test data...");
 
-            
+
             // Create test users
             User user1 = User.builder()
                     .username("alice")
@@ -45,17 +47,17 @@ public class DataInitializer {
                     .walletBalance("0")
                     .avatarUrl("https://randomuser.me/api/portraits/women/1.jpg")
                     .build();
-            
+
             User user2 = User.builder()
                     .username("bob")
                     .email("bob@example.com")
                     .password("password123")
                     .avatarUrl("https://randomuser.me/api/portraits/men/1.jpg")
                     .build();
-            
+
             userRepository.saveAll(Arrays.asList(user1, user2));
             log.info("Created test users");
-            
+
             // Create categories if they don't exist
             List<Category> categories = categoryRepository.findAll();
             if (categories.isEmpty()) {
@@ -70,7 +72,7 @@ public class DataInitializer {
                 categoryRepository.saveAll(categories);
                 log.info("Created categories");
             }
-            
+
             // Create test items
             Item item1 = Item.builder()
                     .title("Vintage Denim Jacket")
@@ -87,10 +89,10 @@ public class DataInitializer {
                     ))
                     .sellerId(user1.getId())
                     .categoryId(categories.get(3).getId()) // Outerwear
-                    .endTime(LocalDateTime.now().plusDays(7).toInstant(java.time.ZoneOffset.UTC))
+                    .endTime(ZonedDateTime.now(ZoneOffset.UTC).plusDays(7))
                     .status(Status.ACTIVE)
                     .build();
-            
+
             Item item2 = Item.builder()
                     .title("Designer Sneakers")
                     .description("Limited edition sneakers, worn twice")
@@ -106,26 +108,26 @@ public class DataInitializer {
                     ))
                     .sellerId(user2.getId())
                     .categoryId(categories.get(5).getId()) // Shoes
-                    .endTime(LocalDateTime.now().plusDays(5).toInstant(java.time.ZoneOffset.UTC))
+                    .endTime(ZonedDateTime.now(ZoneOffset.UTC).plusDays(5))
                     .status(Status.ACTIVE)
                     .build();
-            
+
             itemRepository.saveAll(Arrays.asList(item1, item2));
             log.info("Created test items");
-            
+
             // Create some bids
             Bid bid1 = Bid.builder()
                     .itemId(item1.getId())
                     .userId(user2.getId())
                     .amount(50.00)
                     .build();
-            
+
             item1.setCurrentPrice(50.00);
             itemRepository.save(item1);
-            
+
             bidRepository.save(bid1);
             log.info("Created test bids");
-            
+
             log.info("Test data initialization complete!");
         };
     }

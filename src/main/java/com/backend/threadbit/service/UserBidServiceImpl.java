@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,7 +35,7 @@ public class UserBidServiceImpl implements UserBidService {
     public UserBidsResponse getUserBids(String userId) {
         // Get user's highest bids per item
         List<Bid> userHighestBids = bidRepository.getUserHighestBidsPerItem(userId);
-        
+
         if (userHighestBids.isEmpty()) {
             return UserBidsResponse.builder()
                 .activeBids(Collections.emptyList())
@@ -57,8 +59,9 @@ public class UserBidServiceImpl implements UserBidService {
         Map<String, BidGroupResult> bidGroupMap = bidGroups.stream()
             .collect(Collectors.toMap(BidGroupResult::getId, group -> group));
 
-        LocalDateTime now = LocalDateTime.now();
-        
+        // Use ZonedDateTime with UTC timezone for consistent comparison
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
+
         List<BidItemDto> activeBids = new ArrayList<>();
         List<BidItemDto> wonAuctions = new ArrayList<>();
         List<BidItemDto> lostAuctions = new ArrayList<>();
@@ -70,9 +73,9 @@ public class UserBidServiceImpl implements UserBidService {
             BidGroupResult bidGroup = bidGroupMap.get(userBid.getItemId());
             if (bidGroup == null) continue;
 
-            boolean isAuctionEnded = now.isAfter(LocalDateTime.parse(item.getEndTime().toString()));
+            boolean isAuctionEnded = now.isAfter(item.getEndTime());
             boolean isUserWinning = bidGroup.getHighestBid().getUserId().equals(userId);
-            
+
             // Calculate user's rank
             int userRank = calculateUserRank(bidGroup.getAllBids(), userId);
 

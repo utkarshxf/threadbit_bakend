@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -53,7 +55,10 @@ public class AuctionCompletionService {
 
         // Process each ended auction
         for (Item item : endedAuctions) {
-            processEndedAuction(item);
+//            processEndedAuction(item);
+
+            System.out.println("Processing ended auction for item: " + item.getEndTime());
+
         }
     }
 
@@ -62,16 +67,18 @@ public class AuctionCompletionService {
      * @return List of ended auction items
      */
     private List<Item> findEndedAuctions() {
-        Instant now = LocalDateTime.now().toInstant(java.time.ZoneOffset.UTC);
+        // Use ZonedDateTime with UTC timezone for consistent comparison
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
 
         // Find items where:
         // 1. Item type is AUCTION
         // 2. Status is ACTIVE
         // 3. End time is in the past
         return itemRepository.findAll().stream()
-                .filter(item -> ItemType.AUCTION.equals(item.getItemType()))
-                .filter(item -> Status.ACTIVE.equals(item.getStatus()))
-                .filter(item -> item.getEndTime() != null && item.getEndTime().isBefore(now))
+//                .filter(item -> ItemType.AUCTION.equals(item.getItemType()))
+//                .filter(item -> Status.ACTIVE.equals(item.getStatus()))
+                .filter(item -> Objects.equals(item.getId(), "6838511cb6a7bf1bf24b9ca6"))
+//                .filter(item -> item.getEndTime() != null && item.getEndTime().isBefore(now))
                 .collect(Collectors.toList());
     }
 
