@@ -6,6 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -19,6 +20,7 @@ import java.util.List;
         allowedHeaders = {"Content-Type", "Authorization"}
 )
 @SpringBootApplication
+@EnableScheduling
 public class ThreadBitBackendApplication {
 
     public static void main(String[] args) {
