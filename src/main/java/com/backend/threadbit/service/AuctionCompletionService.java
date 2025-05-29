@@ -45,7 +45,7 @@ public class AuctionCompletionService {
 
         if (endedAuctions.isEmpty()) {
             log.info("No ended auctions found.");
-            emailService.sendSimpleEmail("utkarshxf@gmail.com", "No auctions have ended yet." , "");
+//            emailService.sendSimpleEmail("utkarshxf@gmail.com", "No auctions have ended yet." , "");
             return;
         }
 
