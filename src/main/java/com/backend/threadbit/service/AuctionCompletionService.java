@@ -153,22 +153,24 @@ public class AuctionCompletionService {
             String buyerLocation = getBuyerLocationString(buyer.getId());
             String sellerLocation = getSellerLocationString(seller.getId());
 
-            // Send notification to buyer
-            notificationService.sendAuctionWinNotificationToBuyer(
+            // Send HTML notification to buyer
+            notificationService.sendHtmlAuctionWinNotificationToBuyer(
                     buyer.getEmail(),
                     buyer.getName(),
                     item.getTitle(),
+                    item.getImageUrls(),
                     seller.getName(),
                     seller.getEmail(),
                     seller.getPhoneNumber(),
                     sellerLocation
             );
 
-            // Send notification to seller
-            notificationService.sendAuctionWinNotificationToSeller(
+            // Send HTML notification to seller
+            notificationService.sendHtmlAuctionWinNotificationToSeller(
                     seller.getEmail(),
                     seller.getName(),
                     item.getTitle(),
+                    item.getImageUrls(),
                     buyer.getName(),
                     buyer.getEmail(),
                     buyer.getPhoneNumber(),
