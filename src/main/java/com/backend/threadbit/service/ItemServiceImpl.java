@@ -41,6 +41,8 @@ public class ItemServiceImpl implements ItemService {
     private final PurchaseRepository purchaseRepository;
     @Autowired
     private final UserService userService;
+    @Autowired
+    private final NotificationService notificationService;
 
     @Override
     public List<Item> getAllItems() {
@@ -336,12 +338,48 @@ public class ItemServiceImpl implements ItemService {
                 .build();
 
         // Update item stock
-        item.setStockQuantity(item.getStockQuantity() - purchaseDto.getQuantity());
         item.setSoldQuantity(item.getSoldQuantity() + purchaseDto.getQuantity());
+        item.setStockQuantity(item.getStockQuantity() - purchaseDto.getQuantity());
 
         // If stock is depleted, mark item as ended
         if (item.getStockQuantity() <= 0) {
             item.setStatus(Status.ENDED);
+        }
+
+        // Send notifications
+        try {
+            // Send HTML notification to buyer
+            notificationService.sendHtmlPurchaseNotificationToBuyer(
+                    buyer.getEmail(),
+                    buyer.getUsername(),
+                    item.getTitle(),
+                    item.getImageUrls(),
+                    purchaseDto.getQuantity(),
+                    pricePerUnit,
+                    totalPrice,
+                    seller.getUsername(),
+                    seller.getEmail(),
+                    seller.getPhoneNumber()
+            );
+
+            // Send HTML notification to seller
+            notificationService.sendHtmlPurchaseNotificationToSeller(
+                    seller.getEmail(),
+                    seller.getUsername(),
+                    item.getTitle(),
+                    item.getImageUrls(),
+                    purchaseDto.getQuantity(),
+                    pricePerUnit,
+                    totalPrice,
+                    buyer.getUsername(),
+                    buyer.getEmail(),
+                    buyer.getPhoneNumber()
+            );
+
+            log.info("Purchase notifications sent successfully for item: {}", item.getId());
+        } catch (Exception e) {
+            // Log error but don't fail the purchase transaction
+            log.error("Failed to send purchase notifications: {}", e.getMessage(), e);
         }
 
         // Save updated item
