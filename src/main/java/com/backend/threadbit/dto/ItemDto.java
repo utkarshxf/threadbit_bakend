@@ -1,8 +1,10 @@
 package com.backend.threadbit.dto;
 
 
+import com.backend.threadbit.config.CustomZonedDateTimeDeserializer;
 import com.backend.threadbit.model.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -61,6 +63,7 @@ public class ItemDto {
     private Integer categoryId;
 
     @NotNull(message = "End time is required")
+    @JsonDeserialize(using = CustomZonedDateTimeDeserializer.class)
     private ZonedDateTime endTime;
 
     private LocalDateTime createdAt;

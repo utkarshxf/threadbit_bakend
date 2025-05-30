@@ -55,10 +55,7 @@ public class AuctionCompletionService {
 
         // Process each ended auction
         for (Item item : endedAuctions) {
-//            processEndedAuction(item);
-
-            System.out.println("Processing ended auction for item: " + item.getEndTime());
-
+            processEndedAuction(item);
         }
     }
 
@@ -68,17 +65,15 @@ public class AuctionCompletionService {
      */
     private List<Item> findEndedAuctions() {
         // Use ZonedDateTime with UTC timezone for consistent comparison
-        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC);
-
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.of("+05:30"));
         // Find items where:
         // 1. Item type is AUCTION
         // 2. Status is ACTIVE
         // 3. End time is in the past
         return itemRepository.findAll().stream()
-//                .filter(item -> ItemType.AUCTION.equals(item.getItemType()))
-//                .filter(item -> Status.ACTIVE.equals(item.getStatus()))
-                .filter(item -> Objects.equals(item.getId(), "6838511cb6a7bf1bf24b9ca6"))
-//                .filter(item -> item.getEndTime() != null && item.getEndTime().isBefore(now))
+                .filter(item -> ItemType.AUCTION.equals(item.getItemType()))
+                .filter(item -> Status.ACTIVE.equals(item.getStatus()))
+                .filter(item -> item.getEndTime() != null && item.getEndTime().isBefore(now))
                 .collect(Collectors.toList());
     }
 
