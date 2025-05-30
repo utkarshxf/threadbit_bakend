@@ -2,18 +2,11 @@ package com.backend.threadbit.service;
 
 
 import com.backend.threadbit.dto.UserDto;
-import com.backend.threadbit.repository.ItemRepository;
+import com.backend.threadbit.model.*;
+import com.backend.threadbit.repository.*;
 import com.backend.threadbit.dto.ItemDto;
 import com.backend.threadbit.dto.PagedResponseDto;
 import com.backend.threadbit.dto.PurchaseDto;
-import com.backend.threadbit.model.Item;
-import com.backend.threadbit.model.ItemType;
-import com.backend.threadbit.model.Purchase;
-import com.backend.threadbit.model.Status;
-import com.backend.threadbit.model.User;
-import com.backend.threadbit.repository.CategoryRepository;
-import com.backend.threadbit.repository.PurchaseRepository;
-import com.backend.threadbit.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +36,9 @@ public class ItemServiceImpl implements ItemService {
     private final UserService userService;
     @Autowired
     private final NotificationService notificationService;
+    @Autowired
+    private final LocationRepository locationRepository;
+
 
     @Override
     public List<Item> getAllItems() {
@@ -362,6 +358,7 @@ public class ItemServiceImpl implements ItemService {
                     seller.getPhoneNumber()
             );
 
+            String buyerLocation = getBuyerLocationString(buyer.getId());
             // Send HTML notification to seller
             notificationService.sendHtmlPurchaseNotificationToSeller(
                     seller.getEmail(),
@@ -373,7 +370,8 @@ public class ItemServiceImpl implements ItemService {
                     totalPrice,
                     buyer.getUsername(),
                     buyer.getEmail(),
-                    buyer.getPhoneNumber()
+                    buyer.getPhoneNumber(),
+                    buyerLocation
             );
 
             log.info("Purchase notifications sent successfully for item: {}", item.getId());
@@ -388,6 +386,7 @@ public class ItemServiceImpl implements ItemService {
         // Save and return purchase
         return purchaseRepository.save(purchase);
     }
+
 
     @Override
     public List<Purchase> getPurchasesByBuyer(String buyerId) {
@@ -408,5 +407,45 @@ public class ItemServiceImpl implements ItemService {
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Item> itemPage = itemRepository.searchAvailableInstantBuyItems(keyword, pageable);
         return createPagedResponse(itemPage);
+    }
+
+    private String getBuyerLocationString(String userId) {
+        Optional<Location> locationOpt = locationRepository.findByUserIdAndIsCurrentLocationTrue(userId);
+
+        if (locationOpt.isPresent()) {
+            Location location = locationOpt.get();
+            return formatLocation(location);
+        }
+
+        return "Location not provided";
+    }
+    private String formatLocation(Location location) {
+        StringBuilder sb = new StringBuilder();
+
+        if (location.getAddress() != null && !location.getAddress().isEmpty()) {
+            sb.append(location.getAddress());
+        }
+
+        if (location.getCity() != null && !location.getCity().isEmpty()) {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(location.getCity());
+        }
+
+        if (location.getState() != null && !location.getState().isEmpty()) {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(location.getState());
+        }
+
+        if (location.getCountry() != null && !location.getCountry().isEmpty()) {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(location.getCountry());
+        }
+
+        if (location.getPostalCode() != null && !location.getPostalCode().isEmpty()) {
+            if (sb.length() > 0) sb.append(" ");
+            sb.append(location.getPostalCode());
+        }
+
+        return sb.length() > 0 ? sb.toString() : "Location not provided";
     }
 }

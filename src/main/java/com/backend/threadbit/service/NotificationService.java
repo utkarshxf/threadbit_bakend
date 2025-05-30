@@ -485,7 +485,9 @@ public class NotificationService {
             double totalPrice,
             String buyerName, 
             String buyerEmail, 
-            String buyerPhoneNumber) {
+            String buyerPhoneNumber,
+            String buyerLocation
+    ) {
 
         String subject = "Your item \"" + itemTitle + "\" has been purchased!";
 
@@ -535,6 +537,7 @@ public class NotificationService {
                 "            <p><strong>Name:</strong> " + buyerName + "</p>" +
                 "            <p><strong>Email:</strong> " + buyerEmail + "</p>" +
                 "            <p><strong>Phone:</strong> " + buyerPhoneNumber + "</p>" +
+                "            <p><strong>Location:</strong> " + buyerLocation + "</p>" +
                 "        </div>" +
                 "        <p style=\"margin-top: 20px;\">Please contact the buyer to arrange delivery.</p>" +
                 "    </div>" +
