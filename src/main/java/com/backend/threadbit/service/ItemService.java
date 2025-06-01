@@ -7,6 +7,7 @@ import com.backend.threadbit.dto.PurchaseDto;
 import com.backend.threadbit.model.Bid;
 import com.backend.threadbit.model.Item;
 import com.backend.threadbit.model.Purchase;
+import com.backend.threadbit.model.Size;
 import com.backend.threadbit.model.Status;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public interface ItemService {
     PagedResponseDto<Item> searchItems(String keyword, int page, int size, String sortBy, String sortDir);
 
     // Combined search and filter
-    PagedResponseDto<Item> getItems(String keyword, Integer categoryId, Status status, String sellerId,
+    PagedResponseDto<Item> getItems(String keyword, Integer categoryId, Status status, Size itemSize, String sellerId,
                                    String sellerUsername, int page, int size, String sortBy, String sortDir);
 
     // Instant buy methods

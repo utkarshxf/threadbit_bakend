@@ -1,6 +1,7 @@
 package com.backend.threadbit.repository;
 
 import com.backend.threadbit.model.Item;
+import com.backend.threadbit.model.Size;
 import com.backend.threadbit.model.Status;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ public interface ItemRepository extends MongoRepository<Item, String> {
     Page<Item> findByCategoryId(Integer categoryId, Pageable pageable);
     Page<Item> findBySellerId(String sellerId, Pageable pageable);
     Page<Item> findByStatus(Status status, Pageable pageable);
+    Page<Item> findBySize(Size size, Pageable pageable);
 
     // Search methods
     @Query("{ $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'description': { $regex: ?0, $options: 'i' } } ] }")
@@ -37,6 +39,11 @@ public interface ItemRepository extends MongoRepository<Item, String> {
            "{ $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'description': { $regex: ?0, $options: 'i' } } ] }, " +
            "{ 'status': ?1 } ] }")
     Page<Item> searchByTitleOrDescriptionAndStatus(String keyword, Status status, Pageable pageable);
+
+    @Query("{ $and: [ " +
+           "{ $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'description': { $regex: ?0, $options: 'i' } } ] }, " +
+           "{ 'size': ?1 } ] }")
+    Page<Item> searchByTitleOrDescriptionAndSize(String keyword, Size size, Pageable pageable);
 
     // Find by seller username (requires join with User collection)
     @Query("{ 'sellerId': { $in: ?0 } }")

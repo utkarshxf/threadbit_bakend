@@ -9,6 +9,7 @@ import com.backend.threadbit.model.Bid;
 import com.backend.threadbit.model.Purchase;
 import com.backend.threadbit.service.ItemService;
 import com.backend.threadbit.model.Item;
+import com.backend.threadbit.model.Size;
 import com.backend.threadbit.model.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,7 @@ public class ItemController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) Status status,
+            @RequestParam(required = false) Size ItemSize,
             @RequestParam(required = false) String sellerId,
             @RequestParam(required = false) String sellerUsername,
             @RequestParam(defaultValue = "0") int page,
@@ -51,7 +53,7 @@ public class ItemController {
             // If pagination parameters are provided, use paginated response
             if (page >= 0 && size > 0) {
                 PagedResponseDto<Item> pagedItems = itemService.getItems(
-                    keyword, categoryId, status, sellerId, sellerUsername, page, size, sortBy, sortDir);
+                    keyword, categoryId, status, ItemSize, sellerId, sellerUsername, page, size, sortBy, sortDir);
                 return ResponseEntity.ok(pagedItems);
             }
 

@@ -152,7 +152,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public PagedResponseDto<Item> getItems(String keyword, Integer categoryId, Status status, String sellerId,
+    public PagedResponseDto<Item> getItems(String keyword, Integer categoryId, Status status, Size itemSize, String sellerId,
                                           String sellerUsername, int page, int size, String sortBy, String sortDir) {
         Sort sort = createSort(sortBy, sortDir);
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -180,6 +180,8 @@ public class ItemServiceImpl implements ItemService {
                 itemPage = itemRepository.searchByTitleOrDescriptionAndCategory(keyword, categoryId, pageable);
             } else if (status != null) {
                 itemPage = itemRepository.searchByTitleOrDescriptionAndStatus(keyword, status, pageable);
+            } else if (itemSize != null) {
+                itemPage = itemRepository.searchByTitleOrDescriptionAndSize(keyword, itemSize, pageable);
             } else {
                 itemPage = itemRepository.searchByTitleOrDescription(keyword, pageable);
             }
@@ -191,6 +193,8 @@ public class ItemServiceImpl implements ItemService {
                 System.out.println("Found " + itemPage.getTotalElements() + " items");
             } else if (status != null) {
                 itemPage = itemRepository.findByStatus(status, pageable);
+            } else if (itemSize != null) {
+                itemPage = itemRepository.findBySize(itemSize, pageable);
             } else if (sellerId != null && !sellerId.isEmpty()) {
                 itemPage = itemRepository.findBySellerId(sellerId, pageable);
             } else {
