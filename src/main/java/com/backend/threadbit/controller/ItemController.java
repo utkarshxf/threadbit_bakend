@@ -39,7 +39,7 @@ public class ItemController {
     @GetMapping
     public ResponseEntity<?> getItems(
             @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) String categoryId,
+            @RequestParam(required = false) Integer categoryId,
             @RequestParam(required = false) Status status,
             @RequestParam(required = false) String sellerId,
             @RequestParam(required = false) String sellerUsername,

@@ -14,12 +14,12 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends MongoRepository<Item, String> {
-    List<Item> findByCategoryId(String categoryId);
+    List<Item> findByCategoryId(Integer categoryId);
     List<Item> findBySellerId(String sellerId);
 
     // Pagination methods
     Page<Item> findAll(Pageable pageable);
-    Page<Item> findByCategoryId(String categoryId, Pageable pageable);
+    Page<Item> findByCategoryId(Integer categoryId, Pageable pageable);
     Page<Item> findBySellerId(String sellerId, Pageable pageable);
     Page<Item> findByStatus(Status status, Pageable pageable);
 
@@ -31,7 +31,7 @@ public interface ItemRepository extends MongoRepository<Item, String> {
     @Query("{ $and: [ " +
            "{ $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'description': { $regex: ?0, $options: 'i' } } ] }, " +
            "{ 'categoryId': ?1 } ] }")
-    Page<Item> searchByTitleOrDescriptionAndCategory(String keyword, String categoryId, Pageable pageable);
+    Page<Item> searchByTitleOrDescriptionAndCategory(String keyword, Integer categoryId, Pageable pageable);
 
     @Query("{ $and: [ " +
            "{ $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'description': { $regex: ?0, $options: 'i' } } ] }, " +

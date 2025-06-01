@@ -46,7 +46,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getItemsByCategory(String categoryId) {
+    public List<Item> getItemsByCategory(Integer categoryId) {
+        System.out.println("Filtering by category: " + categoryId);
         return itemRepository.findByCategoryId(categoryId);
     }
 
@@ -119,7 +120,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public PagedResponseDto<Item> getItemsByCategory(String categoryId, int page, int size, String sortBy, String sortDir) {
+    public PagedResponseDto<Item> getItemsByCategory(Integer categoryId, int page, int size, String sortBy, String sortDir) {
         Sort sort = createSort(sortBy, sortDir);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<Item> itemPage = itemRepository.findByCategoryId(categoryId, pageable);
@@ -151,7 +152,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public PagedResponseDto<Item> getItems(String keyword, String categoryId, Status status, String sellerId, 
+    public PagedResponseDto<Item> getItems(String keyword, Integer categoryId, Status status, String sellerId,
                                           String sellerUsername, int page, int size, String sortBy, String sortDir) {
         Sort sort = createSort(sortBy, sortDir);
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -175,7 +176,7 @@ public class ItemServiceImpl implements ItemService {
 
         // Handle combined search and filter
         if (keyword != null && !keyword.isEmpty()) {
-            if (categoryId != null && !categoryId.isEmpty()) {
+            if (categoryId != null) {
                 itemPage = itemRepository.searchByTitleOrDescriptionAndCategory(keyword, categoryId, pageable);
             } else if (status != null) {
                 itemPage = itemRepository.searchByTitleOrDescriptionAndStatus(keyword, status, pageable);
@@ -184,8 +185,10 @@ public class ItemServiceImpl implements ItemService {
             }
         } else {
             // Handle filter only
-            if (categoryId != null && !categoryId.isEmpty()) {
+            if (categoryId != null) {
+                System.out.println("Filtering by category: " + categoryId);
                 itemPage = itemRepository.findByCategoryId(categoryId, pageable);
+                System.out.println("Found " + itemPage.getTotalElements() + " items");
             } else if (status != null) {
                 itemPage = itemRepository.findByStatus(status, pageable);
             } else if (sellerId != null && !sellerId.isEmpty()) {

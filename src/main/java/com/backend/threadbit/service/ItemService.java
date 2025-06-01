@@ -14,7 +14,7 @@ import java.util.List;
 public interface ItemService {
     // Original methods
     List<Item> getAllItems();
-    List<Item> getItemsByCategory(String categoryId);
+    List<Item> getItemsByCategory(Integer categoryId);
     List<Item> getItemsBySeller(String sellerId);
     List<Item> getItemByUsername(String sellerUsername);
     Item getItemById(String id);
@@ -23,7 +23,7 @@ public interface ItemService {
 
     // Pagination methods
     PagedResponseDto<Item> getAllItems(int page, int size, String sortBy, String sortDir);
-    PagedResponseDto<Item> getItemsByCategory(String categoryId, int page, int size, String sortBy, String sortDir);
+    PagedResponseDto<Item> getItemsByCategory(Integer categoryId, int page, int size, String sortBy, String sortDir);
     PagedResponseDto<Item> getItemsBySeller(String sellerId, int page, int size, String sortBy, String sortDir);
     PagedResponseDto<Item> getItemsByStatus(Status status, int page, int size, String sortBy, String sortDir);
 
@@ -31,7 +31,7 @@ public interface ItemService {
     PagedResponseDto<Item> searchItems(String keyword, int page, int size, String sortBy, String sortDir);
 
     // Combined search and filter
-    PagedResponseDto<Item> getItems(String keyword, String categoryId, Status status, String sellerId, 
+    PagedResponseDto<Item> getItems(String keyword, Integer categoryId, Status status, String sellerId,
                                    String sellerUsername, int page, int size, String sortBy, String sortDir);
 
     // Instant buy methods
