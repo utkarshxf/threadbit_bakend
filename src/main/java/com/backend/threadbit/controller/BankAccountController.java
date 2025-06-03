@@ -9,6 +9,7 @@ import com.backend.threadbit.service.BankAccountService;
 import com.backend.threadbit.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/bank-accounts")
+@Slf4j
+@CrossOrigin(
+        origins = {"https://threadbitwebsite-fqj4l.ondigitalocean.app" , "https://threadbit.in" , "threadbit.in","www.threadbit.in", "https://threadbid.in" , "threadbid.in","www.threadbid.in","http://192.168.32.1:5173", "https://secondhand-threads.vercel.app","http://10.244.72.46:8080"},
+        allowCredentials = "true",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
+        allowedHeaders = {"Content-Type", "Authorization"}
+)
 @RequiredArgsConstructor
 public class BankAccountController {
 
