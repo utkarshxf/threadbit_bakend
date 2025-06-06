@@ -36,15 +36,15 @@ public class AuthController {
             log.error("Error sending OTP", e);
             return ResponseEntity.status(e.getStatusCode())
                     .body(OtpResponse.builder()
-                            .status("Error")
-                            .details(e.getReason())
+                            .Status("Error")
+                            .Details(e.getReason())
                             .build());
         } catch (Exception e) {
             log.error("Unexpected error sending OTP", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(OtpResponse.builder()
-                            .status("Error")
-                            .details("An unexpected error occurred")
+                            .Status("Error")
+                            .Details("An unexpected error occurred")
                             .build());
         }
     }
@@ -58,15 +58,15 @@ public class AuthController {
             log.error("Error verifying OTP", e);
             return ResponseEntity.status(e.getStatusCode())
                     .body(OtpResponse.builder()
-                            .status("Error")
-                            .details(e.getReason())
+                            .Status("Error")
+                            .Details(e.getReason())
                             .build());
         } catch (Exception e) {
             log.error("Unexpected error verifying OTP", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(OtpResponse.builder()
-                            .status("Error")
-                            .details("An unexpected error occurred")
+                            .Status("Error")
+                            .Details("An unexpected error occurred")
                             .build());
         }
     }
