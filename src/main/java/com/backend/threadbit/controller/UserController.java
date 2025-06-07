@@ -109,6 +109,22 @@ public class UserController {
                     .body(new ErrorResponse("Internal server error"));
         }
     }
+    @GetMapping("exist/username/{username}")
+    public ResponseEntity<?> ExistUsername(@PathVariable String username) {
+        try {
+            UserResponseDto user = userService.getUserByUsername(username);
+            if(user != null){
+                return ResponseEntity.ok(true);
+            }
+            return ResponseEntity.ok(false);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.ok(false);
+        } catch (Exception e) {
+            log.error("Error getting user", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Internal server error"));
+        }
+    }
 
     @GetMapping("/{userId}/reviews")
     public ResponseEntity<?> getUserReviews(@PathVariable String userId) {

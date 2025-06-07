@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -37,7 +39,7 @@ public class BidController {
             @RequestParam(required = false) String userId) {
         try {
             List<Bid> bids;
-            
+
             if (itemId != null) {
                 bids = bidService.getBidsByItem(itemId);
             } else if (userId != null) {
@@ -45,7 +47,7 @@ public class BidController {
             } else {
                 bids = bidService.getAllBids();
             }
-            
+
             return ResponseEntity.ok(bids);
         } catch (Exception e) {
             log.error("Error getting bids", e);
@@ -57,7 +59,14 @@ public class BidController {
     public ResponseEntity<?> createBid(@Valid @RequestBody BidDto bidDto) {
         try {
             Bid createdBid = bidService.createBid(bidDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdBid);
+
+            // Add information about shipping in the response
+            Map<String, Object> response = new HashMap<>();
+            response.put("bid", createdBid);
+            response.put("message", "Bid placed successfully! If you win the auction, the seller will add shipping details.");
+            response.put("nextStep", "If you win the auction, the seller will add shipping details and send you a notification with tracking information.");
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse(e.getMessage()));

@@ -38,6 +38,10 @@ public class ItemServiceImpl implements ItemService {
     private final NotificationService notificationService;
     @Autowired
     private final LocationRepository locationRepository;
+    @Autowired
+    private final ShippingRecordRepository shippingRecordRepository;
+    @Autowired
+    private final ShippingService shippingService;
 
 
     @Override
@@ -390,8 +394,14 @@ public class ItemServiceImpl implements ItemService {
         // Save updated item
         itemRepository.save(item);
 
-        // Save and return purchase
-        return purchaseRepository.save(purchase);
+        // Save purchase
+        Purchase savedPurchase = purchaseRepository.save(purchase);
+
+        // Create initial shipping record
+        createInitialShippingRecord(item, savedPurchase, buyer, seller);
+
+        // Return saved purchase
+        return savedPurchase;
     }
 
 
@@ -454,5 +464,38 @@ public class ItemServiceImpl implements ItemService {
         }
 
         return sb.length() > 0 ? sb.toString() : "Location not provided";
+    }
+
+    /**
+     * Creates an initial shipping record for an instant buy purchase
+     * @param item The purchased item
+     * @param purchase The purchase record
+     * @param buyer The buyer
+     * @param seller The seller
+     * @return The created shipping record
+     */
+    private ShippingRecord createInitialShippingRecord(Item item, Purchase purchase, User buyer, User seller) {
+        try {
+            // Create a new shipping record with PENDING status
+            ShippingRecord shippingRecord = ShippingRecord.builder()
+                    .itemId(item.getId())
+                    .purchaseId(purchase.getId())
+                    .sellerId(seller.getId())
+                    .buyerId(buyer.getId())
+                    .status(ShippingRecord.ShippingStatus.PENDING)
+                    .build();
+
+            // Save and return the shipping record
+            ShippingRecord savedRecord = shippingRecordRepository.save(shippingRecord);
+
+            log.info("Created initial shipping record for instant buy purchase. Item: {}, Buyer: {}", 
+                    item.getTitle(), buyer.getUsername());
+
+            return savedRecord;
+        } catch (Exception e) {
+            log.error("Error creating initial shipping record for instant buy purchase. Item: {}, Error: {}", 
+                    item.getTitle(), e.getMessage(), e);
+            return null;
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.backend.threadbit.service;
 import com.backend.threadbit.model.*;
 import com.backend.threadbit.repository.BidRepository;
 import com.backend.threadbit.repository.ItemRepository;
+import com.backend.threadbit.repository.ShippingRecordRepository;
 import com.backend.threadbit.repository.UserRepository;
 import com.backend.threadbit.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,8 @@ public class AuctionCompletionService {
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
     private final NotificationService notificationService;
+    private final ShippingRecordRepository shippingRecordRepository;
+    private final ShippingService shippingService;
 
     /**
      * Scheduled task that runs every hour to check for ended auctions
@@ -180,9 +183,45 @@ public class AuctionCompletionService {
                     winningBid.getAmount()
             );
 
+            // Create initial shipping record
+            createInitialShippingRecord(item, winningBid, buyer, seller);
+
             log.info("Successfully sent auction completion notifications for item: {}", item.getTitle());
         } catch (Exception e) {
             log.error("Error sending auction completion notifications for item: {}", item.getTitle(), e);
+        }
+    }
+
+    /**
+     * Creates an initial shipping record for an auction win
+     * @param item The auction item
+     * @param winningBid The winning bid
+     * @param buyer The buyer (winner)
+     * @param seller The seller
+     * @return The created shipping record
+     */
+    private ShippingRecord createInitialShippingRecord(Item item, Bid winningBid, User buyer, User seller) {
+        try {
+            // Create a new shipping record with PENDING status
+            ShippingRecord shippingRecord = ShippingRecord.builder()
+                    .itemId(item.getId())
+                    .bidId(winningBid.getId())
+                    .sellerId(seller.getId())
+                    .buyerId(buyer.getId())
+                    .status(ShippingRecord.ShippingStatus.PENDING)
+                    .build();
+
+            // Save and return the shipping record
+            ShippingRecord savedRecord = shippingRecordRepository.save(shippingRecord);
+
+            log.info("Created initial shipping record for auction win. Item: {}, Buyer: {}", 
+                    item.getTitle(), buyer.getUsername());
+
+            return savedRecord;
+        } catch (Exception e) {
+            log.error("Error creating initial shipping record for auction win. Item: {}, Error: {}", 
+                    item.getTitle(), e.getMessage(), e);
+            return null;
         }
     }
 

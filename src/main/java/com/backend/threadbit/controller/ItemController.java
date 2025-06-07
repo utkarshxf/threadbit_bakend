@@ -19,7 +19,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -175,7 +177,14 @@ public class ItemController {
     public ResponseEntity<?> purchaseItem(@Valid @RequestBody PurchaseDto purchaseDto) {
         try {
             Purchase purchase = itemService.purchaseItem(purchaseDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(purchase);
+
+            // Add information about shipping in the response
+            Map<String, Object> response = new HashMap<>();
+            response.put("purchase", purchase);
+            response.put("message", "Purchase successful! The seller will add shipping details soon.");
+            response.put("nextStep", "The seller will add shipping details and send you a notification with tracking information.");
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ErrorResponse(e.getMessage()));
