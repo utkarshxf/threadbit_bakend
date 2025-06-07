@@ -31,6 +31,11 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/users/exist/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                // Permit all GET requests except for bank-account-controller
+                .requestMatchers(request -> 
+                    request.getMethod().equals("GET") && 
+                    !request.getRequestURI().startsWith("/api/bank-accounts")
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
