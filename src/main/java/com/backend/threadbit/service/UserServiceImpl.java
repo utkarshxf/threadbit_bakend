@@ -101,9 +101,6 @@ public class UserServiceImpl implements UserService {
         if (userDto.getEmail() != null) {
             existingUser.setEmail(userDto.getEmail());
         }
-        if (userDto.getPhoneNumber() != null) {
-            existingUser.setPhoneNumber(userDto.getPhoneNumber());
-        }
         if (userDto.getWalletBalance() != null) {
             existingUser.setWalletBalance(userDto.getWalletBalance());
         }

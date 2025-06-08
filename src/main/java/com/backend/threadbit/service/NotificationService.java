@@ -169,9 +169,8 @@ public class NotificationService {
                 "            <p><strong>Name:</strong> " + sellerName + "</p>" +
                 "            <p><strong>Email:</strong> " + sellerEmail + "</p>" +
                 "            <p><strong>Phone:</strong> " + sellerPhone + "</p>" +
-                "            <p><strong>Location:</strong> " + sellerLocation + "</p>" +
                 "        </div>" +
-                "        <p style=\"margin-top: 20px;\">Please contact the seller to arrange payment and delivery.</p>" +
+                "        <p style=\"margin-top: 20px;\">You will get an mail by the seller for delivery purposes with in few days.</p>" +
                 "    </div>" +
                 "    <div class=\"footer\">" +
                 "        <p>Thank you for using our platform!</p>" +
@@ -255,7 +254,7 @@ public class NotificationService {
                 "            <p><strong>Phone:</strong> " + buyerPhone + "</p>" +
                 "            <p><strong>Location:</strong> " + buyerLocation + "</p>" +
                 "        </div>" +
-                "        <p style=\"margin-top: 20px;\">Please contact the buyer to arrange delivery.</p>" +
+                "        <p style=\"margin-top: 20px;\">Please add delivery details to this item or contact the buyer to arrange delivery.</p>" +
                 "    </div>" +
                 "    <div class=\"footer\">" +
                 "        <p>Thank you for using our platform!</p>" +
@@ -444,7 +443,7 @@ public class NotificationService {
                 "            <p><strong>Email:</strong> " + sellerEmail + "</p>" +
                 "            <p><strong>Phone:</strong> " + sellerPhoneNumber + "</p>" +
                 "        </div>" +
-                "        <p style=\"margin-top: 20px;\">Please contact the seller to arrange delivery.</p>" +
+                "        <p style=\"margin-top: 20px;\">You will get an mail by the seller for delivery purposes with in few days.</p>" +
                 "    </div>" +
                 "    <div class=\"footer\">" +
                 "        <p>Thank you for using our platform!</p>" +
@@ -539,7 +538,7 @@ public class NotificationService {
                 "            <p><strong>Phone:</strong> " + buyerPhoneNumber + "</p>" +
                 "            <p><strong>Location:</strong> " + buyerLocation + "</p>" +
                 "        </div>" +
-                "        <p style=\"margin-top: 20px;\">Please contact the buyer to arrange delivery.</p>" +
+                "        <p style=\"margin-top: 20px;\">Please add delivery details to this item or contact the buyer to arrange delivery.</p>" +
                 "    </div>" +
                 "    <div class=\"footer\">" +
                 "        <p>Thank you for using our platform!</p>" +
