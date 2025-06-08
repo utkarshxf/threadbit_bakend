@@ -99,7 +99,7 @@ public class ShippingServiceImpl implements ShippingService {
         }
 
         // Save receipt image
-        String receiptImageUrl = saveReceiptImage(shippingDetailsDto.getReceiptImage());
+        String receiptImageUrl = shippingDetailsDto.getReceiptImageUrl();
 
         // Create shipping record
         ShippingRecord shippingRecord = ShippingRecord.builder()
@@ -115,7 +115,7 @@ public class ShippingServiceImpl implements ShippingService {
                 .carrier(shippingDetailsDto.getCarrier())
                 .shippingMethod(shippingDetailsDto.getShippingMethod())
                 .additionalNotes(shippingDetailsDto.getAdditionalNotes())
-                .receiptImageUrl(receiptImageUrl)
+                .receiptImageUrl(shippingDetailsDto.getReceiptImageUrl())
                 .status(shippingDetailsDto.getStatus())
                 .build();
 
@@ -173,6 +173,92 @@ public class ShippingServiceImpl implements ShippingService {
         shippingRecord.setUpdatedAt(LocalDateTime.now());
 
         return shippingRecordRepository.save(shippingRecord);
+    }
+
+    @Override
+    @Transactional
+    public ShippingRecord updateShippingDetails(String id, ShippingDetailsDto shippingDetailsDto) {
+        // Find the existing shipping record
+        ShippingRecord shippingRecord = shippingRecordRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Shipping record not found"));
+
+        // Validate that item exists
+        Item item = itemRepository.findById(shippingDetailsDto.getItemId())
+                .orElseThrow(() -> new NoSuchElementException("Item not found"));
+
+        // Validate that seller exists
+        User seller = userRepository.findById(shippingDetailsDto.getSellerId())
+                .orElseThrow(() -> new NoSuchElementException("Seller not found"));
+
+        // Validate that buyer exists
+        User buyer = userRepository.findById(shippingDetailsDto.getBuyerId())
+                .orElseThrow(() -> new NoSuchElementException("Buyer not found"));
+
+        // Validate that seller is the actual seller of the item
+        if (!item.getSellerId().equals(seller.getId())) {
+            throw new IllegalArgumentException("Seller is not the owner of the item");
+        }
+
+        // Validate purchase or bid if provided
+        Purchase purchase = null;
+        Bid bid = null;
+
+        if (shippingDetailsDto.getPurchaseId() != null && !shippingDetailsDto.getPurchaseId().isEmpty()) {
+            purchase = purchaseRepository.findById(shippingDetailsDto.getPurchaseId())
+                    .orElseThrow(() -> new NoSuchElementException("Purchase not found"));
+
+            // Validate that purchase is for the specified item
+            if (!purchase.getItemId().equals(item.getId())) {
+                throw new IllegalArgumentException("Purchase is not for the specified item");
+            }
+
+            // Validate that buyer is the actual buyer of the purchase
+            if (!purchase.getBuyerId().equals(buyer.getId())) {
+                throw new IllegalArgumentException("Buyer is not the buyer of the purchase");
+            }
+        }
+
+        if (shippingDetailsDto.getBidId() != null && !shippingDetailsDto.getBidId().isEmpty()) {
+            bid = bidRepository.findById(shippingDetailsDto.getBidId())
+                    .orElseThrow(() -> new NoSuchElementException("Bid not found"));
+
+            // Validate that bid is for the specified item
+            if (!bid.getItemId().equals(item.getId())) {
+                throw new IllegalArgumentException("Bid is not for the specified item");
+            }
+
+            // Validate that buyer is the actual bidder
+            if (!bid.getUserId().equals(buyer.getId())) {
+                throw new IllegalArgumentException("Buyer is not the bidder of the bid");
+            }
+        }
+
+        // Update shipping record fields
+        shippingRecord.setItemId(item.getId());
+        shippingRecord.setItem(item);
+        shippingRecord.setPurchaseId(purchase != null ? purchase.getId() : null);
+        shippingRecord.setPurchase(purchase);
+        shippingRecord.setBidId(bid != null ? bid.getId() : null);
+        shippingRecord.setBid(bid);
+        shippingRecord.setSellerId(seller.getId());
+        shippingRecord.setSeller(seller);
+        shippingRecord.setBuyerId(buyer.getId());
+        shippingRecord.setBuyer(buyer);
+        shippingRecord.setTrackingNumber(shippingDetailsDto.getTrackingNumber());
+        shippingRecord.setCarrier(shippingDetailsDto.getCarrier());
+        shippingRecord.setShippingMethod(shippingDetailsDto.getShippingMethod());
+        shippingRecord.setAdditionalNotes(shippingDetailsDto.getAdditionalNotes());
+        shippingRecord.setReceiptImageUrl(shippingDetailsDto.getReceiptImageUrl());
+        shippingRecord.setStatus(shippingDetailsDto.getStatus());
+        shippingRecord.setUpdatedAt(LocalDateTime.now());
+        try {
+            sendShippingNotificationToBuyer(shippingRecord, item, seller, buyer);
+        } catch (Exception e) {
+            log.error("Failed to send shipping notification: {}", e.getMessage(), e);
+        }
+        // Save and return the updated shipping record
+        return shippingRecordRepository.save(shippingRecord);
+
     }
 
     /**

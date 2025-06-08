@@ -192,6 +192,33 @@ public class ShippingController {
     }
 
     /**
+     * Update shipping details
+     * 
+     * @param id the ID of the shipping record
+     * @param shippingDetailsDto the updated shipping details
+     * @return the updated shipping record
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateShippingDetails(
+            @PathVariable String id,
+            @Valid @RequestBody ShippingDetailsDto shippingDetailsDto) {
+        try {
+            ShippingRecord shippingRecord = shippingService.updateShippingDetails(id, shippingDetailsDto);
+            return ResponseEntity.ok(shippingRecord);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ErrorResponse(e.getMessage()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            log.error("Error updating shipping details", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ErrorResponse("Internal server error"));
+        }
+    }
+
+    /**
      * Error response class
      */
     private static class ErrorResponse {

@@ -50,7 +50,7 @@ public class ShippingDetailsDto {
     
     // Receipt image (Base64 encoded string)
     @NotBlank(message = "Receipt image is required")
-    private String receiptImage;
+    private String receiptImageUrl;
     
     // Status
     @NotNull(message = "Shipping status is required")

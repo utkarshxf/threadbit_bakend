@@ -338,6 +338,8 @@ public class ItemServiceImpl implements ItemService {
         Purchase purchase = Purchase.builder()
                 .itemId(item.getId())
                 .buyerId(purchaseDto.getBuyerId())
+                .buyer(buyer)
+                .item(item)
                 .quantity(purchaseDto.getQuantity())
                 .pricePerUnit(pricePerUnit)
                 .totalPrice(totalPrice)

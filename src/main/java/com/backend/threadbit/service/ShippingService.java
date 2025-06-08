@@ -9,7 +9,7 @@ import java.util.List;
  * Service for managing shipping records
  */
 public interface ShippingService {
-    
+
     /**
      * Add shipping details for a sold item
      * 
@@ -17,7 +17,7 @@ public interface ShippingService {
      * @return the created shipping record
      */
     ShippingRecord addShippingDetails(ShippingDetailsDto shippingDetailsDto);
-    
+
     /**
      * Get shipping record by ID
      * 
@@ -25,7 +25,7 @@ public interface ShippingService {
      * @return the shipping record
      */
     ShippingRecord getShippingRecordById(String id);
-    
+
     /**
      * Get shipping records by item ID
      * 
@@ -33,7 +33,7 @@ public interface ShippingService {
      * @return list of shipping records
      */
     List<ShippingRecord> getShippingRecordsByItemId(String itemId);
-    
+
     /**
      * Get shipping records by purchase ID
      * 
@@ -41,7 +41,7 @@ public interface ShippingService {
      * @return list of shipping records
      */
     List<ShippingRecord> getShippingRecordsByPurchaseId(String purchaseId);
-    
+
     /**
      * Get shipping records by bid ID
      * 
@@ -49,7 +49,7 @@ public interface ShippingService {
      * @return list of shipping records
      */
     List<ShippingRecord> getShippingRecordsByBidId(String bidId);
-    
+
     /**
      * Get shipping records by seller ID
      * 
@@ -57,7 +57,7 @@ public interface ShippingService {
      * @return list of shipping records
      */
     List<ShippingRecord> getShippingRecordsBySellerId(String sellerId);
-    
+
     /**
      * Get shipping records by buyer ID
      * 
@@ -65,7 +65,7 @@ public interface ShippingService {
      * @return list of shipping records
      */
     List<ShippingRecord> getShippingRecordsByBuyerId(String buyerId);
-    
+
     /**
      * Update shipping record status
      * 
@@ -74,4 +74,13 @@ public interface ShippingService {
      * @return the updated shipping record
      */
     ShippingRecord updateShippingRecordStatus(String id, ShippingRecord.ShippingStatus status);
+
+    /**
+     * Update shipping details
+     * 
+     * @param id the ID of the shipping record to update
+     * @param shippingDetailsDto the updated shipping details
+     * @return the updated shipping record
+     */
+    ShippingRecord updateShippingDetails(String id, ShippingDetailsDto shippingDetailsDto);
 }
