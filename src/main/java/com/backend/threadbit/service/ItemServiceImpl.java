@@ -481,6 +481,9 @@ public class ItemServiceImpl implements ItemService {
                     .itemId(item.getId())
                     .purchaseId(purchase.getId())
                     .sellerId(seller.getId())
+                    .seller(seller)
+                    .buyer(buyer)
+                    .item(item)
                     .buyerId(buyer.getId())
                     .status(ShippingRecord.ShippingStatus.PENDING)
                     .build();

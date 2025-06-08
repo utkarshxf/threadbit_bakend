@@ -208,6 +208,9 @@ public class AuctionCompletionService {
                     .bidId(winningBid.getId())
                     .sellerId(seller.getId())
                     .buyerId(buyer.getId())
+                    .seller(seller)
+                    .buyer(buyer)
+                    .item(item)
                     .status(ShippingRecord.ShippingStatus.PENDING)
                     .build();
 
