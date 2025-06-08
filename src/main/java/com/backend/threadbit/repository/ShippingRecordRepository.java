@@ -12,47 +12,47 @@ import java.util.Optional;
  */
 @Repository
 public interface ShippingRecordRepository extends MongoRepository<ShippingRecord, String> {
-    
+
     /**
      * Find shipping records by item ID
      * 
      * @param itemId the ID of the item
-     * @return list of shipping records
+     * @return list of shipping records ordered by createdAt descending
      */
-    List<ShippingRecord> findByItemId(String itemId);
-    
+    List<ShippingRecord> findByItemIdOrderByCreatedAtDesc(String itemId);
+
     /**
      * Find shipping records by purchase ID
      * 
      * @param purchaseId the ID of the purchase
-     * @return list of shipping records
+     * @return list of shipping records ordered by createdAt descending
      */
-    List<ShippingRecord> findByPurchaseId(String purchaseId);
-    
+    List<ShippingRecord> findByPurchaseIdOrderByCreatedAtDesc(String purchaseId);
+
     /**
      * Find shipping records by bid ID
      * 
      * @param bidId the ID of the bid
-     * @return list of shipping records
+     * @return list of shipping records ordered by createdAt descending
      */
-    List<ShippingRecord> findByBidId(String bidId);
-    
+    List<ShippingRecord> findByBidIdOrderByCreatedAtDesc(String bidId);
+
     /**
      * Find shipping records by seller ID
      * 
      * @param sellerId the ID of the seller
-     * @return list of shipping records
+     * @return list of shipping records ordered by createdAt descending
      */
-    List<ShippingRecord> findBySellerId(String sellerId);
-    
+    List<ShippingRecord> findBySellerIdOrderByCreatedAtDesc(String sellerId);
+
     /**
      * Find shipping records by buyer ID
      * 
      * @param buyerId the ID of the buyer
-     * @return list of shipping records
+     * @return list of shipping records ordered by createdAt descending
      */
-    List<ShippingRecord> findByBuyerId(String buyerId);
-    
+    List<ShippingRecord> findByBuyerIdOrderByCreatedAtDesc(String buyerId);
+
     /**
      * Find shipping record by item ID and seller ID
      * 
@@ -61,7 +61,7 @@ public interface ShippingRecordRepository extends MongoRepository<ShippingRecord
      * @return optional shipping record
      */
     Optional<ShippingRecord> findByItemIdAndSellerId(String itemId, String sellerId);
-    
+
     /**
      * Find shipping record by item ID and buyer ID
      * 

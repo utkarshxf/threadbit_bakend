@@ -9,6 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface LocationRepository extends MongoRepository<Location, String> {
-    List<Location> findByUserId(String userId);
+    List<Location> findByUserIdOrderByCreatedAtDesc(String userId);
     Optional<Location> findByUserIdAndIsCurrentLocationTrue(String userId);
 }

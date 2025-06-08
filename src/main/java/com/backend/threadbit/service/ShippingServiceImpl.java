@@ -140,27 +140,27 @@ public class ShippingServiceImpl implements ShippingService {
 
     @Override
     public List<ShippingRecord> getShippingRecordsByItemId(String itemId) {
-        return shippingRecordRepository.findByItemId(itemId);
+        return shippingRecordRepository.findByItemIdOrderByCreatedAtDesc(itemId);
     }
 
     @Override
     public List<ShippingRecord> getShippingRecordsByPurchaseId(String purchaseId) {
-        return shippingRecordRepository.findByPurchaseId(purchaseId);
+        return shippingRecordRepository.findByPurchaseIdOrderByCreatedAtDesc(purchaseId);
     }
 
     @Override
     public List<ShippingRecord> getShippingRecordsByBidId(String bidId) {
-        return shippingRecordRepository.findByBidId(bidId);
+        return shippingRecordRepository.findByBidIdOrderByCreatedAtDesc(bidId);
     }
 
     @Override
     public List<ShippingRecord> getShippingRecordsBySellerId(String sellerId) {
-        return shippingRecordRepository.findBySellerId(sellerId);
+        return shippingRecordRepository.findBySellerIdOrderByCreatedAtDesc(sellerId);
     }
 
     @Override
     public List<ShippingRecord> getShippingRecordsByBuyerId(String buyerId) {
-        return shippingRecordRepository.findByBuyerId(buyerId);
+        return shippingRecordRepository.findByBuyerIdOrderByCreatedAtDesc(buyerId);
     }
 
     @Override

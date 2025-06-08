@@ -152,8 +152,8 @@ public class UserServiceImpl implements UserService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
 
-        // Get all reviews for the user
-        List<Review> reviews = reviewRepository.findByUserId(userId);
+        // Get all reviews for the user (latest first)
+        List<Review> reviews = reviewRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
         // Convert to DTOs
         return reviews.stream()
@@ -211,7 +211,7 @@ public class UserServiceImpl implements UserService {
 
     private void updateUserRating(String userId) {
         // Get all reviews for the user
-        List<Review> reviews = reviewRepository.findByUserId(userId);
+        List<Review> reviews = reviewRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
         if (reviews.isEmpty()) {
             return;

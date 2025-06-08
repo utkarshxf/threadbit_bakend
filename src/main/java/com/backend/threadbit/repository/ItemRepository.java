@@ -15,8 +15,8 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends MongoRepository<Item, String> {
-    List<Item> findByCategoryId(Integer categoryId);
-    List<Item> findBySellerId(String sellerId);
+    List<Item> findByCategoryIdOrderByCreatedAtDesc(Integer categoryId);
+    List<Item> findBySellerIdOrderByCreatedAtDesc(String sellerId);
 
     // Pagination methods
     Page<Item> findAll(Pageable pageable);
@@ -52,19 +52,19 @@ public interface ItemRepository extends MongoRepository<Item, String> {
 
     // Get items where user is bidding (auction not ended)
 
-    @Query("{ 'endTime': { '$gt': ?1 }, '_id': { '$in': ?0 } }")
+    @Query(value = "{ 'endTime': { '$gt': ?1 }, '_id': { '$in': ?0 } }", sort = "{ 'createdAt': -1 }")
     List<Item> getActiveBidItemsByUserId(List<String> itemIds, ZonedDateTime currentTime);
 
     // Get items where user won (auction ended and user has highest bid)
-    @Query("{ 'endTime': { '$lt': ?1 }, '_id': { '$in': ?0 } }")
+    @Query(value = "{ 'endTime': { '$lt': ?1 }, '_id': { '$in': ?0 } }", sort = "{ 'createdAt': -1 }")
     List<Item> getWonItemsByUserId(List<String> itemIds, ZonedDateTime currentTime);
 
     // Get items where user lost (auction ended and user doesn't have highest bid)
-    @Query("{ 'endTime': { '$lt': ?1 }, '_id': { '$in': ?0 } }")
+    @Query(value = "{ 'endTime': { '$lt': ?1 }, '_id': { '$in': ?0 } }", sort = "{ 'createdAt': -1 }")
     List<Item> getLostItemsByUserId(List<String> itemIds, ZonedDateTime currentTime);
 
     // Alternative: Get all items by IDs (for processing in service layer)
-    @Query("{ '_id': { '$in': ?0 } }")
+    @Query(value = "{ '_id': { '$in': ?0 } }", sort = "{ 'createdAt': -1 }")
     List<Item> findItemsByIds(List<String> itemIds);
 
     @Query("{ $and: [ " +

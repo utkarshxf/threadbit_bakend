@@ -52,18 +52,18 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> getItemsByCategory(Integer categoryId) {
         System.out.println("Filtering by category: " + categoryId);
-        return itemRepository.findByCategoryId(categoryId);
+        return itemRepository.findByCategoryIdOrderByCreatedAtDesc(categoryId);
     }
 
     @Override
     public List<Item> getItemsBySeller(String sellerId) {
-        return itemRepository.findBySellerId(sellerId);
+        return itemRepository.findBySellerIdOrderByCreatedAtDesc(sellerId);
     }
 
     @Override
     public List<Item> getItemByUsername(String sellerUsername) {
         Optional<User> seller = userRepository.findByUsername(sellerUsername);
-        if(seller.isPresent()) return itemRepository.findBySellerId(seller.get().getId());
+        if(seller.isPresent()) return itemRepository.findBySellerIdOrderByCreatedAtDesc(seller.get().getId());
         return Collections.emptyList();
     }
 

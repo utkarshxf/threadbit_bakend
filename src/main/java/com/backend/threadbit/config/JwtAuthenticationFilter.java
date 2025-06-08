@@ -37,9 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         
         try {
             // Extract JWT token
-            System.out.println(authHeader);
             final String jwt = authHeader.substring(7);
-            System.out.println(jwt);
             // Extract phone number from token
             final String phoneNumber = jwtConfig.extractPhoneNumber(jwt);
             // If token is valid and not expired

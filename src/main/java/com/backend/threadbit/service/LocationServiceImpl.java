@@ -98,8 +98,8 @@ public class LocationServiceImpl implements LocationService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
 
-        // Get all user's locations
-        List<Location> locations = locationRepository.findByUserId(userId);
+        // Get all user's locations (latest first)
+        List<Location> locations = locationRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
         // Convert and return as list of LocationDto
         return locations.stream()
@@ -179,7 +179,7 @@ public class LocationServiceImpl implements LocationService {
             unsetCurrentLocations(userId);
         } else {
             // If not explicitly set as current, check if this is the first location
-            List<Location> existingLocations = locationRepository.findByUserId(userId);
+            List<Location> existingLocations = locationRepository.findByUserIdOrderByCreatedAtDesc(userId);
             if (existingLocations.isEmpty()) {
                 // If this is the first location, set it as current
                 locationDto.setIsCurrentLocation(true);
@@ -198,7 +198,7 @@ public class LocationServiceImpl implements LocationService {
 
     private void unsetCurrentLocations(String userId) {
         // Get all user's locations
-        List<Location> locations = locationRepository.findByUserId(userId);
+        List<Location> locations = locationRepository.findByUserIdOrderByCreatedAtDesc(userId);
 
         // Unset current location flag for all locations
         for (Location loc : locations) {

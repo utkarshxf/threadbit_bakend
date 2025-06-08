@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ReviewRepository extends MongoRepository<Review, String> {
-    List<Review> findByUserId(String userId);
-    List<Review> findByReviewerId(String reviewerId);
-    List<Review> findByUserIdAndReviewerId(String userId, String reviewerId);
+    List<Review> findByUserIdOrderByCreatedAtDesc(String userId);
+    List<Review> findByReviewerIdOrderByCreatedAtDesc(String reviewerId);
+    List<Review> findByUserIdAndReviewerIdOrderByCreatedAtDesc(String userId, String reviewerId);
 }
