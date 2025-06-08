@@ -50,7 +50,8 @@ public class UserServiceImpl implements UserService {
                 .socialMedia(userDto.getSocialMedia())
                 .walletBalance(userDto.getWalletBalance())
                 .avatarUrl(userDto.getAvatarUrl())
-                .password(userDto.getPassword())
+                .description(userDto.getDescription())
+                .isVerified(false)
                 .build();
 
         // Save the user
@@ -109,11 +110,11 @@ public class UserServiceImpl implements UserService {
         if (userDto.getSocialMedia() != null) {
             existingUser.setSocialMedia(userDto.getSocialMedia());
         }
-        if (userDto.getPassword() != null) {
-            existingUser.setPassword(userDto.getPassword());
-        }
         if (userDto.getAvatarUrl() != null) {
             existingUser.setAvatarUrl(userDto.getAvatarUrl());
+        }
+        if (userDto.getDescription() != null) {
+            existingUser.setDescription(userDto.getDescription());
         }
 
         // Save the updated user
@@ -141,6 +142,8 @@ public class UserServiceImpl implements UserService {
                 .name(user.getName())
                 .avatarUrl(user.getAvatarUrl())
                 .username(user.getUsername())
+                .description(user.getDescription())
+                .isVerified(user.isVerified())
                 .email(user.getEmail())
                 .locations(locations)
                 .build();

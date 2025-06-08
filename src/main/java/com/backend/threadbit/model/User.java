@@ -29,7 +29,8 @@ public class User {
     private String phoneNumber;
     private List<Map<String , String>> socialMedia;
     private String email;
-    private String password;
+    private boolean isVerified;
+    private String description;
     private String avatarUrl;
 
     @Builder.Default

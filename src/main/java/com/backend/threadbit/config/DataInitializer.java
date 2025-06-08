@@ -43,7 +43,7 @@ public class DataInitializer {
             User user1 = User.builder()
                     .username("alice")
                     .email("alice@example.com")
-                    .password("password123")
+                    .description("sdadsa")
                     .walletBalance("0")
                     .avatarUrl("https://randomuser.me/api/portraits/women/1.jpg")
                     .build();
@@ -51,7 +51,7 @@ public class DataInitializer {
             User user2 = User.builder()
                     .username("bob")
                     .email("bob@example.com")
-                    .password("password123")
+                    .description("adsad")
                     .avatarUrl("https://randomuser.me/api/portraits/men/1.jpg")
                     .build();
 

@@ -39,10 +39,9 @@ public class UserDto {
 
     private List<Map<String,String>> socialMedia;
 
-    
-    @NotBlank(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters")
-    private String password;
+    private boolean isVerified;
+
+    private String description;
     
     private String avatarUrl;
     private LocalDateTime createdAt;

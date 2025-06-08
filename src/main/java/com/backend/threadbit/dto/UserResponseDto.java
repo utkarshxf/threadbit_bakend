@@ -19,9 +19,10 @@ public class UserResponseDto {
     private String name;
     private String walletBalance;
     private String phoneNumber;
+    private String description;
+    private boolean isVerified;
     private List<Map<String , String>> socialMedia;
     private String email;
-    private String password;
     private String avatarUrl;
     private List<LocationDto> locations;
 }
