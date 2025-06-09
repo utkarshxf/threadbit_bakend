@@ -350,7 +350,7 @@ public class ItemServiceImpl implements ItemService {
         item.setSoldQuantity(item.getSoldQuantity() + purchaseDto.getQuantity());
 
         // If stock is depleted, mark item as ended
-        if (item.getStockQuantity() <= 0) {
+        if (Objects.equals(item.getStockQuantity(), item.getSoldQuantity())) {
             item.setStatus(Status.ENDED);
         }
 
