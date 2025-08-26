@@ -485,4 +485,4 @@ https://hammerhead-app-zgpcv.ondigitalocean.app/swagger-ui/index.html
 
 ---
 
-This README provides a comprehensive overview of the ThreadBit backend application. For more detailed information, please refer to the code documentation and Swagger UI.
+This README provides a comprehensive overview of the ThreadBit backend application. For more detailed information, please refer to the code documentation and Swagger UI https://threadbit-fjn35.ondigitalocean.app/swagger-ui/index.html#/.
