@@ -1010,15 +1010,6 @@ flowchart TD
 
 ## 📊 Performance & Monitoring
 
-### Key Metrics Dashboard
-
-```mermaid
-pie title Transaction Distribution
-    "Instant Buy" : 65
-    "Auction Sales" : 25
-    "Failed Transactions" : 7
-    "Pending" : 3
-```
 
 ## 🛡️ Security Implementation
 
@@ -1102,16 +1093,6 @@ graph TD
     style CONTROLLER fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
     style SERVICE fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     style REPOSITORY fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-```
-
-### Testing Strategy
-
-```mermaid
-pyramid
-    title Testing Pyramid
-    Unit Tests : 70
-    Integration Tests : 20
-    End-to-End Tests : 10
 ```
 
 ## 📈 Deployment Architecture
