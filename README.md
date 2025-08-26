@@ -81,9 +81,9 @@ The backend provides a comprehensive API for user management, item listing, bidd
    ```
 
 2. **Configure application.properties**
-   
+
    The application uses various external services. You'll need to configure the following properties:
-   
+
    - MongoDB connection
    - Email service credentials
    - 2Factor.in API key
@@ -316,171 +316,121 @@ https://hammerhead-app-zgpcv.ondigitalocean.app/swagger-ui/index.html
 ## Flow Diagrams
 
 ### User Registration and Authentication Flow
-```
-┌─────────┐     ┌────────────┐     ┌──────────────┐     ┌──────────────┐
-│  Client │────▶│ Send OTP   │────▶│ Verify OTP   │────▶│ JWT Token    │
-└─────────┘     └────────────┘     └──────────────┘     └──────────────┘
-                      │                   │                     │
-                      ▼                   ▼                     ▼
-               ┌────────────┐     ┌──────────────┐     ┌──────────────┐
-               │ 2Factor.in │     │ Create User  │     │ Access APIs  │
-               └────────────┘     └──────────────┘     └──────────────┘
+```mermaid
+flowchart LR
+    Client --> SendOTP[Send OTP]
+    SendOTP --> VerifyOTP[Verify OTP]
+    VerifyOTP --> JWTToken[JWT Token]
+    SendOTP --> TwoFactor[2Factor.in]
+    VerifyOTP --> CreateUser[Create User]
+    JWTToken --> AccessAPIs[Access APIs]
 ```
 
 ### Auction Item Flow
-```
-┌─────────┐     ┌────────────┐     ┌──────────────┐     ┌──────────────┐
-│  Seller │────▶│ Create Item│────▶│ Item Listed  │────▶│ Bids Placed  │
-└─────────┘     └────────────┘     └──────────────┘     └──────────────┘
-                                                               │
-                                                               ▼
-┌─────────┐     ┌────────────┐     ┌──────────────┐     ┌──────────────┐
-│  Buyer  │◀────│ Notification│◀────│ Auction End  │◀────│ Highest Bid  │
-└─────────┘     └────────────┘     └──────────────┘     └──────────────┘
-      │                                                        
-      ▼                                                        
-┌─────────┐     ┌────────────┐     ┌──────────────┐     
-│ Payment │────▶│ Shipping   │────▶│ Delivery     │     
-└─────────┘     └────────────┘     └──────────────┘     
+```mermaid
+flowchart TD
+    Seller --> CreateItem[Create Item]
+    CreateItem --> ItemListed[Item Listed]
+    ItemListed --> BidsPlaced[Bids Placed]
+    BidsPlaced --> HighestBid[Highest Bid]
+    HighestBid --> AuctionEnd[Auction End]
+    AuctionEnd --> Notification
+    Notification --> Buyer
+    Buyer --> Payment
+    Payment --> Shipping
+    Shipping --> Delivery
 ```
 
 ### Instant Buy Flow
-```
-┌─────────┐     ┌────────────┐     ┌──────────────┐     
-│  Seller │────▶│ Create Item│────▶│ Item Listed  │     
-└─────────┘     └────────────┘     └──────────────┘     
-                                          │
-                                          ▼
-┌─────────┐     ┌────────────┐     ┌──────────────┐     ┌──────────────┐
-│  Buyer  │────▶│ Purchase   │────▶│ Payment      │────▶│ Notification │
-└─────────┘     └────────────┘     └──────────────┘     └──────────────┘
-                                                               │
-                                                               ▼
-                     ┌────────────┐     ┌──────────────┐     
-                     │ Shipping   │────▶│ Delivery     │     
-                     └────────────┘     └──────────────┘     
+```mermaid
+flowchart TD
+    Seller --> CreateItem[Create Item]
+    CreateItem --> ItemListed[Item Listed]
+    ItemListed --> Buyer
+    Buyer --> Purchase
+    Purchase --> Payment
+    Payment --> Notification
+    Notification --> Shipping
+    Shipping --> Delivery
 ```
 
 ## Sequence Diagrams
 
 ### User Authentication Sequence
-```
-┌─────┐          ┌─────────────┐          ┌───────────┐          ┌─────────┐
-│User │          │AuthController│          │OtpService │          │2Factor.in│
-└──┬──┘          └──────┬──────┘          └─────┬─────┘          └────┬────┘
-   │  Request OTP    │                         │                      │
-   │ ─────────────> │                         │                      │
-   │                │                         │                      │
-   │                │ Send OTP                │                      │
-   │                │ ─────────────────────> │                      │
-   │                │                         │  Send SMS OTP        │
-   │                │                         │ ──────────────────> │
-   │                │                         │                      │
-   │                │                         │  OTP Response        │
-   │                │                         │ <────────────────── │
-   │                │ OTP Response            │                      │
-   │                │ <───────────────────── │                      │
-   │  OTP Response  │                         │                      │
-   │ <───────────── │                         │                      │
-   │                │                         │                      │
-   │  Verify OTP    │                         │                      │
-   │ ─────────────> │                         │                      │
-   │                │ Verify OTP              │                      │
-   │                │ ─────────────────────> │                      │
-   │                │                         │  Verify OTP          │
-   │                │                         │ ──────────────────> │
-   │                │                         │                      │
-   │                │                         │  Verification Result │
-   │                │                         │ <────────────────── │
-   │                │ Verification Result     │                      │
-   │                │ <───────────────────── │                      │
-   │                │                         │                      │
-   │  JWT Token     │                         │                      │
-   │ <───────────── │                         │                      │
-   │                │                         │                      │
-└──┴──┘          └──────┴──────┘          └─────┴─────┘          └────┴────┘
+```mermaid
+sequenceDiagram
+    participant User
+    participant AuthController
+    participant OtpService
+    participant TwoFactor as 2Factor.in
+
+    User->>AuthController: Request OTP
+    AuthController->>OtpService: Send OTP
+    OtpService->>TwoFactor: Send SMS OTP
+    TwoFactor-->>OtpService: OTP Response
+    OtpService-->>AuthController: OTP Response
+    AuthController-->>User: OTP Response
+
+    User->>AuthController: Verify OTP
+    AuthController->>OtpService: Verify OTP
+    OtpService->>TwoFactor: Verify OTP
+    TwoFactor-->>OtpService: Verification Result
+    OtpService-->>AuthController: Verification Result
+    AuthController-->>User: JWT Token
 ```
 
 ### Item Creation and Bidding Sequence
-```
-┌──────┐        ┌───────────────┐        ┌────────────┐        ┌─────────────┐
-│Seller│        │ItemController  │        │ItemService │        │ItemRepository│
-└──┬───┘        └───────┬───────┘        └─────┬──────┘        └──────┬──────┘
-   │ Create Item      │                      │                       │
-   │ ───────────────> │                      │                       │
-   │                  │                      │                       │
-   │                  │  Create Item         │                       │
-   │                  │ ──────────────────> │                       │
-   │                  │                      │                       │
-   │                  │                      │  Save Item            │
-   │                  │                      │ ──────────────────>  │
-   │                  │                      │                       │
-   │                  │                      │  Item Saved           │
-   │                  │                      │ <────────────────────│
-   │                  │  Item Created        │                       │
-   │                  │ <────────────────── │                       │
-   │ Item Created     │                      │                       │
-   │ <─────────────── │                      │                       │
-   │                  │                      │                       │
-┌──┴───┐        ┌───────┴───────┐        ┌─────┴──────┐        ┌──────┴──────┐
-│Bidder│        │BidController   │        │BidService  │        │BidRepository │
-└──┬───┘        └───────┬───────┘        └─────┬──────┘        └──────┬──────┘
-   │ Place Bid        │                      │                       │
-   │ ───────────────> │                      │                       │
-   │                  │  Place Bid           │                       │
-   │                  │ ──────────────────> │                       │
-   │                  │                      │  Save Bid             │
-   │                  │                      │ ──────────────────>  │
-   │                  │                      │                       │
-   │                  │                      │  Bid Saved            │
-   │                  │                      │ <────────────────────│
-   │                  │  Bid Placed          │                       │
-   │                  │ <────────────────── │                       │
-   │ Bid Confirmation │                      │                       │
-   │ <─────────────── │                      │                       │
-   │                  │                      │                       │
-└──┬───┘        └───────┴───────┘        └─────┴──────┘        └──────┴──────┘
+```mermaid
+sequenceDiagram
+    participant Seller
+    participant ItemController
+    participant ItemService
+    participant ItemRepository
+    participant Bidder
+    participant BidController
+    participant BidService
+    participant BidRepository
+
+    Seller->>ItemController: Create Item
+    ItemController->>ItemService: Create Item
+    ItemService->>ItemRepository: Save Item
+    ItemRepository-->>ItemService: Item Saved
+    ItemService-->>ItemController: Item Created
+    ItemController-->>Seller: Item Created
+
+    Bidder->>BidController: Place Bid
+    BidController->>BidService: Place Bid
+    BidService->>BidRepository: Save Bid
+    BidRepository-->>BidService: Bid Saved
+    BidService-->>BidController: Bid Placed
+    BidController-->>Bidder: Bid Confirmation
 ```
 
 ### Purchase and Shipping Sequence
-```
-┌──────┐        ┌───────────────┐        ┌────────────────┐        ┌─────────────────┐
-│Buyer │        │ItemController  │        │ItemService     │        │NotificationService│
-└──┬───┘        └───────┬───────┘        └────────┬───────┘        └─────────┬───────┘
-   │ Purchase Item     │                         │                          │
-   │ ───────────────>  │                         │                          │
-   │                   │                         │                          │
-   │                   │  Purchase Item          │                          │
-   │                   │ ───────────────────>   │                          │
-   │                   │                         │                          │
-   │                   │                         │  Create Purchase         │
-   │                   │                         │ ─────────────────────>  │
-   │                   │                         │                          │
-   │                   │                         │  Notify Seller           │
-   │                   │                         │ <─────────────────────  │
-   │                   │  Purchase Confirmation  │                          │
-   │                   │ <───────────────────   │                          │
-   │ Purchase Confirmed│                         │                          │
-   │ <───────────────  │                         │                          │
-   │                   │                         │                          │
-┌──┴───┐        ┌───────┴───────┐        ┌────────┴───────┐        ┌─────────┴───────┐
-│Seller│        │ShippingController│      │ShippingService │        │ShippingRepository│
-└──┬───┘        └───────┬───────┘        └────────┬───────┘        └─────────┬───────┘
-   │ Add Shipping      │                         │                          │
-   │ ───────────────>  │                         │                          │
-   │                   │  Create Shipping        │                          │
-   │                   │ ───────────────────>    │                          │
-   │                   │                         │  Save Shipping           │
-   │                   │                         │ ─────────────────────>   │
-   │                   │                         │                          │
-   │                   │                         │  Shipping Saved          │
-   │                   │                         │ <─────────────────────   │
-   │                   │  Shipping Created       │                          │
-   │                   │ <───────────────────    │                          │
-   │ Shipping Confirmed│                         │                          │
-   │ <───────────────  │                         │                          │
-   │                   │                         │                          │
-└──┴───┘        └───────┴───────┘        └────────┴───────┘        └─────────┴───────┘
+```mermaid
+sequenceDiagram
+    participant Buyer
+    participant ItemController
+    participant ItemService
+    participant NotificationService
+    participant Seller
+    participant ShippingController
+    participant ShippingService
+    participant ShippingRepository
+
+    Buyer->>ItemController: Purchase Item
+    ItemController->>ItemService: Purchase Item
+    ItemService->>NotificationService: Create Purchase
+    NotificationService-->>ItemService: Notify Seller
+    ItemService-->>ItemController: Purchase Confirmation
+    ItemController-->>Buyer: Purchase Confirmed
+
+    Seller->>ShippingController: Add Shipping
+    ShippingController->>ShippingService: Create Shipping
+    ShippingService->>ShippingRepository: Save Shipping
+    ShippingRepository-->>ShippingService: Shipping Saved
+    ShippingService-->>ShippingController: Shipping Created
+    ShippingController-->>Seller: Shipping Confirmed
 ```
 
 ---
