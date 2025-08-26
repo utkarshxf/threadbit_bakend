@@ -4,7 +4,7 @@ ThreadBit is a comprehensive e-commerce platform for second-hand clothing, featu
 
 ## 📊 Quick Stats
 - **6** Core Collections
-- **15+** API Endpoints  
+- **16+** API Endpoints  
 - **3** External Service Integrations
 - **2** Business Models (Auction + Instant Buy)
 
