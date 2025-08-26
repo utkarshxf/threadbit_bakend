@@ -851,37 +851,40 @@ sequenceDiagram
 
 ### 🛠️ API Endpoints Mind Map
 
-```mermaid
-mindmap
-    root((🚀 ThreadBit API))
-        🔐 Authentication
-            POST /api/auth/send-otp
-            POST /api/auth/verify-number
-        👤 Users
-            GET /api/users/{id}
-            PATCH /api/users/{id}
-            GET /api/users/exist/{username}
-        📦 Items
-            GET /api/items
-            GET /api/items/{id}
-            POST /api/items
-            POST /api/items/instant-buy
-            PATCH /api/items/{id}/status
-        💰 Bids
-            POST /api/bids
-            GET /api/bids/item/{itemId}
-            GET /api/bids/user/{userId}
-        🛒 Purchases
-            POST /api/items/purchase
-            GET /api/items/purchases/{buyerId}
-        💳 Transactions
-            GET /api/transactions/user/{userId}
-            POST /api/transactions/withdraw
-        📦 Shipping
-            POST /api/shipping
-            GET /api/shipping/purchase/{purchaseId}
-            PATCH /api/shipping/{id}/status
-```
+flowchart TD
+    A[🚀 ThreadBit API] --> B[🔐 Authentication]
+    B --> B1[POST /api/auth/send-otp]
+    B --> B2[POST /api/auth/verify-number]
+
+    A --> C[👤 Users]
+    C --> C1[GET /api/users/{id}]
+    C --> C2[PATCH /api/users/{id}]
+    C --> C3[GET /api/users/exist/{username}]
+
+    A --> D[📦 Items]
+    D --> D1[GET /api/items]
+    D --> D2[GET /api/items/{id}]
+    D --> D3[POST /api/items]
+    D --> D4[POST /api/items/instant-buy]
+    D --> D5[PATCH /api/items/{id}/status]
+
+    A --> E[💰 Bids]
+    E --> E1[POST /api/bids]
+    E --> E2[GET /api/bids/item/{itemId}]
+    E --> E3[GET /api/bids/user/{userId}]
+
+    A --> F[🛒 Purchases]
+    F --> F1[POST /api/items/purchase]
+    F --> F2[GET /api/items/purchases/{buyerId}]
+
+    A --> G[💳 Transactions]
+    G --> G1[GET /api/transactions/user/{userId}]
+    G --> G2[POST /api/transactions/withdraw]
+
+    A --> H[📦 Shipping]
+    H --> H1[POST /api/shipping]
+    H --> H2[GET /api/shipping/purchase/{purchaseId}]
+    H --> H3[PATCH /api/shipping/{id}/status]
 
 ---
 
