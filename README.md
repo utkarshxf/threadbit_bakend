@@ -1020,17 +1020,6 @@ pie title Transaction Distribution
     "Pending" : 3
 ```
 
-### Response Time Monitoring
-
-```mermaid
-xychart-beta
-    title "API Response Times (Last 7 Days)"
-    x-axis [Mon, Tue, Wed, Thu, Fri, Sat, Sun]
-    y-axis "Response Time (ms)" 0 --> 500
-    bar [120, 145, 132, 158, 143, 167, 134]
-    line [100, 110, 115, 125, 130, 140, 120]
-```
-
 ## 🛡️ Security Implementation
 
 ### Security Layers
