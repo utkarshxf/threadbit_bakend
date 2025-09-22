@@ -73,4 +73,11 @@ public interface ItemRepository extends MongoRepository<Item, String> {
             "{ 'stockQuantity': { $gt: 0 } }, " +
             "{ $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'description': { $regex: ?0, $options: 'i' } } ] } ] }")
     Page<Item> searchAvailableInstantBuyItems(String keyword, Pageable pageable);
+
+    // Find active auctions that have ended but not yet processed
+    @Query("{ $and: [ " +
+            "{ 'itemType': 'AUCTION' }, " +
+            "{ 'status': 'ACTIVE' }, " +
+            "{ 'endTime': { $lt: ?0 } } ] }")
+    List<Item> findEndedActiveAuctions(ZonedDateTime currentTime);
 }
