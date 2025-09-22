@@ -69,15 +69,9 @@ public class AuctionCompletionService {
     private List<Item> findEndedAuctions() {
         // Use ZonedDateTime with UTC timezone for consistent comparison
         ZonedDateTime now = ZonedDateTime.now(ZoneOffset.of("+05:30"));
-        // Find items where:
-        // 1. Item type is AUCTION
-        // 2. Status is ACTIVE
-        // 3. End time is in the past
-        return itemRepository.findAll().stream()
-                .filter(item -> ItemType.AUCTION.equals(item.getItemType()))
-                .filter(item -> Status.ACTIVE.equals(item.getStatus()))
-                .filter(item -> item.getEndTime() != null && item.getEndTime().isBefore(now))
-                .collect(Collectors.toList());
+        // Use the optimized repository method to directly query the database
+        // This avoids loading all items into memory and prevents heap space exhaustion
+        return itemRepository.findEndedActiveAuctions(now);
     }
 
     /**
