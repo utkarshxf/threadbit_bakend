@@ -32,7 +32,7 @@ public class ThreadBitBackendApplication {
             // Check if categories exist
             if (categoryRepository.count() == 0) {
                 List<String> categories = Arrays.asList(
-                        "Tops", "Bottoms", "Dresses", "Outerwear", "Accessories", "Shoes"
+                        "Tops", "Bottoms", "Dresses", "Outerwear", "Accessories", "Shoes" , "Posters" , "Stickers"
                 );
 
                 // Create categories

@@ -33,6 +33,16 @@ public class User {
     private String description;
     private String avatarUrl;
 
+    // Additional fields for artist data
+    private String birthDate;
+    private String deathDate;
+    private String nationality;
+    private String notableWorks;
+    private String artMovement;
+    private String education;
+    private String awards;
+    private String artistId; // Original Neo4j artist ID
+
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 }

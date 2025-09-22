@@ -26,9 +26,9 @@ public class Item {
     private String title;
     private String description;
     private String brand;
-    private Size size;
+    private List<Size> size;
     private Condition condition;
-    private String color;
+    private List<String> color;
     private double startingPrice;
     private double currentPrice;
     private List<String> imageUrls;

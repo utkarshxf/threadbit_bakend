@@ -39,13 +39,13 @@ public class ItemDto {
     private String brand;
 
     @NotNull(message = "Size is required")
-    private Size size;
+    private List<Size> size;
 
     @NotNull(message = "Condition is required")
     private Condition condition;
 
     @NotBlank(message = "Color is required")
-    private String color;
+    private List<String> color;
 
     @NotNull(message = "Starting price is required")
     @Positive(message = "Starting price must be positive")
