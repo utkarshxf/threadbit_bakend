@@ -288,7 +288,7 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new NoSuchElementException("Item not found"));
 
         // Check if item is an instant buy item
-        if (item.getItemType() != ItemType.INSTANT_BUY) {
+        if (item.getItemType() == ItemType.AUCTION ) {
             throw new IllegalArgumentException("Item is not available for instant purchase");
         }
 
@@ -340,6 +340,12 @@ public class ItemServiceImpl implements ItemService {
                 .buyerId(purchaseDto.getBuyerId())
                 .buyer(buyer)
                 .item(item)
+                .size(
+                        purchaseDto.getSize() != null ? purchaseDto.getSize() : Size.M
+                )
+                .color(
+                        purchaseDto.getColor()
+                )
                 .quantity(purchaseDto.getQuantity())
                 .pricePerUnit(pricePerUnit)
                 .totalPrice(totalPrice)

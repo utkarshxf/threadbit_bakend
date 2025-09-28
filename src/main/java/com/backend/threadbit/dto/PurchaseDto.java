@@ -1,5 +1,6 @@
 package com.backend.threadbit.dto;
 
+import com.backend.threadbit.model.Size;
 import com.backend.threadbit.model.Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -31,6 +33,14 @@ public class PurchaseDto {
     
     private Integer pricePerUnit;
     private Integer totalPrice;
+
+    @NotNull(message = "Size is required")
+    private Size size;
+
+    @NotBlank(message = "Color is required")
+    private String color;
+
+
     private LocalDateTime purchaseDate;
     private Status status;
 }

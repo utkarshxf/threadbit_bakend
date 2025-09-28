@@ -8,6 +8,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -31,6 +33,9 @@ public class Purchase {
     private Integer quantity;
     private Integer pricePerUnit;
     private Integer totalPrice;
+
+    private Size size;
+    private String color;
     
     @Builder.Default
     private LocalDateTime purchaseDate = LocalDateTime.now();
